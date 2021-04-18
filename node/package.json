@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "node --experimental-specifier-resolution=node src/run.js"
+    "start": "node --experimental-specifier-resolution=node src/run.js",
+    "transactions": "node --experimental-specifier-resolution=node test/transactions.js"
   },
   "type": "module",
   "author": "",
@@ -12,6 +13,7 @@
   "dependencies": {
     "esm": "^3.2.25",
     "lisk-sdk": "^5.0.4",
+    "n": "^7.1.0",
     "quokka": "0.0.7"
   },
   "devDependencies": {
