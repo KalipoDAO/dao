@@ -10,10 +10,13 @@ genesisBlockDevnet.header.asset.accounts = genesisBlockDevnet.header.asset.accou
     },
   }
 ));
+genesisBlockDevnet.header.timestamp = 1618824790;
+
 const customConfig = {
   label: 'dao',
   genesisConfig: {
     communityIdentifier: 'LCUDAO',
+    blockTime: 5,
   },
   logger: {
     consoleLogLevel: 'debug',

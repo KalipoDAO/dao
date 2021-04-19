@@ -1,5 +1,5 @@
 /* global BigInt */
-import {codec, cryptography, transactions, apiClient, utils} from "lisk-sdk";
+import {apiClient, codec, cryptography, transactions, utils} from "lisk-sdk";
 import fetch from 'node-fetch'
 
 export const fetchApi = async (api, endpoint, filters) => {
@@ -8,17 +8,28 @@ export const fetchApi = async (api, endpoint, filters) => {
   return data.data;
 }
 
-export const getFullAssetSchema = assetSchema => utils.objects.mergeDeep({}, baseAssetSchema, { properties: { asset: assetSchema },});
+export const getFullAssetSchema = assetSchema =>
+  utils.objects.mergeDeep({}, baseAssetSchema, {
+    properties: {
+      asset: assetSchema
+    },
+  });
 
 export class TransactionBuilder {
-  constructor(api, ws) {
+  constructor(api, ws, accounts) {
     this.ws = ws;
     this.api = api;
+    this.accounts = accounts;
+    this.height = 0
   }
 
   connect = async () => {
-    await this.getClient()
-    await this.getNodeInfo()
+    try {
+      await this.getClient()
+      await this.getNodeInfo()
+    } catch (e) {
+
+    }
   }
 
   getClient = async () => {
@@ -45,7 +56,8 @@ export class TransactionBuilder {
   setModuleAssetId(moduleId, assetId) {
     this.moduleId = moduleId;
     this.assetId = assetId;
-    const assetSchema = this.wsClientCache.schemas.transactionsAssets.find(s => s.moduleID === moduleId && s.assetID === assetId)
+    const assetSchema = this.wsClientCache.schemas.transactionsAssets
+      .find(s => s.moduleID === moduleId && s.assetID === assetId)
     this.schema = assetSchema.schema;
     return this;
   }
@@ -87,9 +99,35 @@ export class TransactionBuilder {
     return this;
   }
 
-  broadcast = async () => {
-    return await this.wsClientCache.transaction.send(this.signedTransaction)
+  wait = async (blocks) => {
+    const startHeight = (await this.wsClientCache.node.getNodeInfo()).height
+    return {
+      then: (resolve) => {
+        this.wsClientCache.subscribe('app:block:new', (data) => {
+          const block = this.wsClientCache.block.decode(new Buffer.from(data.block, 'hex'))
+          if (blocks + startHeight < block.header.height) {
+            resolve(true)
+          }
+        })
+      }
+    }
   }
+
+  broadcast = async () => {
+    try {
+      await this.sign();
+      return await this.wsClientCache.transaction.send(this.signedTransaction)
+    } catch (e) {
+      return e
+    }
+  }
+
+  send = (username) => {
+    this.setPassphrase(this.accounts.find(a => a.username === username).passphrase)
+    return this.broadcast()
+  }
+
+
 }
 
 export const baseAssetSchema = {
@@ -130,67 +168,3 @@ export const baseAssetSchema = {
     },
   },
 };
-
-//
-// export const createTransaction = async ({
-//                                           moduleId,
-//                                           assetId,
-//                                           baseFee = '0',
-//                                           passphrase,
-//                                           fee = null,
-//                                           networkIdentifier = '0e45f42f61b3d36399c4832f2e6783be946d557c7c274a11c8fe5c4ddbed84db',
-//                                           assets,
-//                                           schema,
-//                                           nonce = null
-//                                         }) => {
-//     const {publicKey} = cryptography.getPrivateAndPublicKeyFromPassphrase(
-//       passphrase
-//     );
-//     const address = cryptography.getAddressFromPassphrase(passphrase);
-//     if (nonce === null) {
-//       const account = await fetchAccountInfo(address.toString("hex"));
-//       if (account?.sequence?.nonce) {
-//         nonce = account.sequence.nonce;
-//       } else {
-//         nonce = 0;
-//       }
-//     }
-//     const transactionObject = {
-//       moduleID: moduleId,
-//       assetID: assetId,
-//       nonce: BigInt(nonce),
-//       fee: BigInt(transactions.convertLSKToBeddows('0.01')),
-//       senderPublicKey: publicKey,
-//       asset: {
-//         ...assets
-//       }
-//     }
-//     const tx = transactions.signTransaction(
-//       schema,
-//       transactionObject,
-//       Buffer.from(networkIdentifier, "hex"),
-//       passphrase
-//     );
-//     if (fee === null) {
-//       const size = tx.getBytes().length;
-//       fee = BigInt(1000 * size);
-//     }
-//
-//     if (typeof fee === 'string') {
-//       fee = BigInt(transactions.convertLSKToBeddows(fee));
-//     }
-//
-//     const signedTransaction = transactions.signTransaction(
-//       schema,
-//       {...transactionObject, fee},
-//       Buffer.from(networkIdentifier, "hex"),
-//       passphrase
-//     );
-//
-//     const {id, ...rest} = signedTransaction;
-//     return {
-//       id: id.toString("hex"),
-//       tx: codec.codec.toJSON(getFullAssetSchema(schema), rest),
-//       signedTransaction: signedTransaction,
-//     }
-//   }
