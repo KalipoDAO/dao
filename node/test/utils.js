@@ -1,6 +1,7 @@
 /* global BigInt */
 import {apiClient, codec, cryptography, transactions, utils} from "lisk-sdk";
 import fetch from 'node-fetch'
+import {validator} from "@liskhq/lisk-validator";
 
 export const fetchApi = async (api, endpoint, filters) => {
   const response = await fetch(`${api}${endpoint}`);
@@ -73,6 +74,10 @@ export class TransactionBuilder {
       return account.sequence.nonce;
     }
     return 0;
+  }
+
+  validateSchema = async () => {
+    return validator.validate(this.schema, this.assets)
   }
 
   sign = async () => {

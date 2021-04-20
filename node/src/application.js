@@ -1,6 +1,6 @@
 import {ExtendedAPIPlugin} from "./plugins";
 import {Application, configDevnet, genesisBlockDevnet, HTTPAPIPlugin, utils,} from 'lisk-sdk';
-import {SprinklerModule} from "./modules";
+import {SprinklerModule, DaoModule} from "./modules";
 import {DPoSModule, KeysModule, SequenceModule, TokenModule} from "lisk-framework";
 
 genesisBlockDevnet.header.asset.accounts = genesisBlockDevnet.header.asset.accounts
@@ -8,6 +8,10 @@ genesisBlockDevnet.header.asset.accounts = genesisBlockDevnet.header.asset.accou
     sprinkler: {
       username: ""
     },
+    dao: {
+      owned: [],
+      member: [],
+    }
   }
 ));
 genesisBlockDevnet.header.timestamp = 1618824790;
@@ -49,6 +53,7 @@ app._registerModule(TokenModule, false);
 app._registerModule(SequenceModule, false);
 app._registerModule(KeysModule, false);
 app._registerModule(DPoSModule, false);
+app._registerModule(DaoModule, false);
 
 app.registerPlugin(HTTPAPIPlugin);
 app.registerPlugin(ExtendedAPIPlugin);

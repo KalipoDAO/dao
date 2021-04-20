@@ -20,12 +20,22 @@ const run = async () => {
     .setAssets({username: "test123"})
     .send('test123')
 
-  await tb
+await tb
     .setModuleAssetId(6666, 100)
     .setAssets({username: "test1"})
     .send('test1')
 
-  await tb.wait(2)
+  await tb.wait(1)
+
+  console.log(await tb
+    .setModuleAssetId(3500, 0)
+    .setAssets({
+      name: "first",
+      members: [],
+      rules: {}
+    })
+    .send('test')
+  )
 
 }
 

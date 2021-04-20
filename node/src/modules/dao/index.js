@@ -5,6 +5,7 @@ import {
   createProposalSchema,
   voteSchema,
 } from "./schema";
+import { DaoModule } from "./daoModule";
 
 export {
   acceptActionSchema,
@@ -12,4 +13,5 @@ export {
   createDaoSchema,
   createProposalSchema,
   voteSchema,
+  DaoModule,
 }
