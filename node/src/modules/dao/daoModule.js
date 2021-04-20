@@ -1,11 +1,13 @@
 import { BaseModule } from 'lisk-sdk';
-import { CreateDao } from "./transactions";
+import { CreateDao, CreateProposal } from "./transactions";
+import {getAllDaosAsJSON, getDao} from "./daoAsset";
+import {getAllProposalsAsJSON, getAllProposalsByDaoAsJSON, getProposal} from "./proposalAsset";
 
 export class DaoModule extends BaseModule {
   name = 'dao';
   id = 3500;
   transactionAssets = [
-    new CreateDao(),
+    new CreateDao(), new CreateProposal(),
   ];
   accountSchema = {
     type: "object",
@@ -35,10 +37,13 @@ export class DaoModule extends BaseModule {
   }
 
   actions = {
-    // getAllDaos: async () => getAllDaosAsJSON(this._dataAccess),
+    getAllDaos: async (params) => getAllDaosAsJSON(this._dataAccess, params),
+    getDao: async (params) => getDao(this._dataAccess, params.id),
+    getAllProposals: async (params) => getAllProposalsAsJSON(this._dataAccess, params),
+    getAllProposalsByDao: async (params) => getAllProposalsByDaoAsJSON(this._dataAccess, params),
+    getProposal: async (params) => getProposal(this._dataAccess, params.id),
     // getVotes: async ({dao, offset, limit}) => getVotes(this._dataAccess, dao, offset, limit),
     // getMembers: async ({dao, offset, limit}) => getMembers(this._dataAccess, dao, offset, limit),
-    // getFullDao: async ({dao}) => getMembers(this._dataAccess, dao),
   }
 
   reducers = {

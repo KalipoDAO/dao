@@ -1,6 +1,7 @@
 import {codec, cryptography} from 'lisk-sdk';
-import {daoAssetSchema} from "./schema";
+import {daoAssetSchema, daosStoreSchema} from "./schema";
 
+const CHAIN_STATE_DAO = "dao";
 const CHAIN_STATE_DAOS = "dao:registeredDaos";
 
 const getDaoId = (name) => cryptography.hash(new Buffer.from(name))
@@ -13,9 +14,51 @@ const createDao = (assets) => {
   }
 }
 
+const getAllDaos = async (stateStore, action = false) => {
+  const allDaosBuffer = action ?
+    await stateStore.getChainState(CHAIN_STATE_DAOS) :
+    await stateStore.chain.get(CHAIN_STATE_DAOS)
+  if (!allDaosBuffer) {
+    return {daos: []}
+  }
+  return codec.decode(
+    daosStoreSchema,
+    allDaosBuffer,
+  )
+}
+
+const getAllDaosAsJSON = async (stateStore, {offset, limit}) => {
+  const allDaos = await getAllDaos(stateStore, true)
+  const daoJson = codec.toJSON(daosStoreSchema, {daos: allDaos.daos.slice(offset, limit)})
+  const fullDaos = await Promise.all(daoJson.daos.map(async dao => (await getDao(stateStore, dao.id))))
+  return {
+    meta: {
+      count: daoJson.daos && daoJson.daos.length || 0,
+      limit: limit || 100,
+      offset: offset || 0,
+    },
+    data: fullDaos,
+  }
+}
+
+const getDao = async (stateStore, id) => {
+  const daoBuffer = await stateStore.getChainState(
+    `${CHAIN_STATE_DAO}:${id}`,
+  )
+
+  if (!daoBuffer) {
+    return {}
+  }
+
+  return codec.toJSON(daoAssetSchema, codec.decode(
+    daoAssetSchema,
+    daoBuffer,
+  ))
+}
+
 const findDao = async (stateStore, daoName) => {
   const registeredDaoBuffer = await stateStore.chain.get(
-    `${CHAIN_STATE_DAOS}:${getDaoId(daoName)}`,
+    `${CHAIN_STATE_DAO}:${getDaoId(daoName).toString('hex')}`,
   );
 
   if (!registeredDaoBuffer) {
@@ -24,7 +67,22 @@ const findDao = async (stateStore, daoName) => {
 
   return codec.decode(
     daoAssetSchema,
-    registeredDaosBuffer,
+    registeredDaoBuffer,
+  );
+}
+
+const findDaoById = async (stateStore, daoId) => {
+  const registeredDaoBuffer = await stateStore.chain.get(
+    `${CHAIN_STATE_DAO}:${daoId.toString('hex')}`,
+  );
+
+  if (!registeredDaoBuffer) {
+    return false;
+  }
+
+  return codec.decode(
+    daoAssetSchema,
+    registeredDaoBuffer,
   );
 }
 
@@ -38,7 +96,7 @@ const updateDao = async (stateStore, dao) => {
   }
 
   await stateStore.chain.set(
-    `${CHAIN_STATE_DAOS}:${dao.id}`,
+    `${CHAIN_STATE_DAO}:${dao.id.toString('hex')}`,
     codec.encode(daoAssetSchema, {
       ...foundDao,
       ...dao,
@@ -54,9 +112,18 @@ const addDao = async (stateStore, dao) => {
   if (!dao.id) {
     dao = createDao({...dao})
   }
+  const allDaos = await getAllDaos(stateStore);
+  allDaos.daos.push({
+    id: dao.id,
+    name: dao.name,
+  })
+  await stateStore.chain.set(
+    CHAIN_STATE_DAOS,
+    codec.encode(daosStoreSchema, allDaos)
+  )
 
   await stateStore.chain.set(
-    `${CHAIN_STATE_DAOS}:${dao.id}`,
+    `${CHAIN_STATE_DAO}:${dao.id.toString('hex')}`,
     codec.encode(daoAssetSchema, {
       id: dao.id,
       name: dao.name,
@@ -73,7 +140,11 @@ export {
   CHAIN_STATE_DAOS,
   createDao,
   findDao,
+  findDaoById,
   addDao,
   updateDao,
   getDaoId,
+  getAllDaosAsJSON,
+  getDao,
+  getAllDaos,
 }

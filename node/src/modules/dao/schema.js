@@ -71,9 +71,47 @@ export const daoAssetSchema = {
   }
 }
 
+export const daosStoreSchema = {
+  $id: "lisk/dao/list",
+  type: "object",
+  required: ['daos'],
+  properties: {
+    daos: {
+      type: "array",
+      fieldNumber: 1,
+      items: {
+        type: "object",
+        required: ['id', 'name'],
+        properties: {
+          id: {
+            dataType: "bytes",
+            fieldNumber: 1,
+          },
+          name: {
+            dataType: "string",
+            fieldNumber: 2,
+          }
+        }
+      }
+    }
+  }
+}
+
 export const proposalAssetSchema = {
   $id: "lisk/dao/proposal",
   type: "object",
+  required: [
+    "id",
+    "creator",
+    "description",
+    "options",
+    "rules",
+    "nonce",
+    "start",
+    "end",
+    "actions",
+    "state",
+  ],
   properties: {
     id: {
       dataType: "bytes",
@@ -86,7 +124,7 @@ export const proposalAssetSchema = {
       maxLength: 20,
     },
     description: {
-      type: "string",
+      dataType: "string",
       fieldNumber: 3,
       minLength: 5,
       maxLength: 140,
@@ -94,11 +132,11 @@ export const proposalAssetSchema = {
     options: {
       type: "array",
       fieldNumber: 4,
+      minItems: 2,
+      maxItems: 10,
       items: {
         type: "object",
         required: ["label", "id"],
-        minItems: 2,
-        maxItems: 10,
         properties: {
           label: {
             dataType: "string",
@@ -152,15 +190,23 @@ export const proposalAssetSchema = {
       dataType: "uint32",
       fieldNumber: 8,
     },
+    state: {
+      dataType: "string",
+      fieldNumber: 9,
+      enum: ["unresolved", "resolved"],
+      default: "unresolved",
+    },
     actions: {
       type: "array",
-      fieldNumber: 9,
+      fieldNumber: 10,
+      minItems: 0,
+      maxItems: 5,
       items: {
         type: "object",
-        required: ["moduleID", "reducers", "params"],
+        required: ["moduleID", "reducers",],
         properties: {
           moduleID: {
-            dataType: "uin32",
+            dataType: "uint32",
             fieldNumber: 1,
           },
           reducers: {
@@ -168,8 +214,28 @@ export const proposalAssetSchema = {
             fieldNumber: 2,
           },
           params: {
-            dataType: "object",
+            type: "array",
             fieldNumber: 3,
+            minItems: 0,
+            items: {
+              type: "object",
+              required: ["k", "v", "paramType"],
+              properties: {
+                k: {
+                  dataType: 'string',
+                  fieldNumber: 1,
+                },
+                v: {
+                  dataType: 'string',
+                  fieldNumber: 2
+                },
+                paramType: {
+                  dataType: 'string',
+                  fieldNumber: 3,
+                  enum: ["string", "uint32", "uint64", "sint64", "boolean", "bytes"],
+                }
+              }
+            }
           },
           acceptor: {
             dataType: "bytes",
@@ -180,11 +246,57 @@ export const proposalAssetSchema = {
         }
       }
     },
-    state: {
-      dataType: "string",
-      fieldNumber: 10,
-      enum: ["unresolved", "resolved"],
-      default: "unresolved",
+  }
+}
+
+export const proposalsStoreSchema = {
+  $id: "lisk/dao/proposal/list",
+  type: "object",
+  required: ['proposals'],
+  properties: {
+    proposals: {
+      type: "array",
+      fieldNumber: 1,
+      items: {
+        type: "object",
+        required: ['id', 'daoId'],
+        properties: {
+          id: {
+            dataType: "bytes",
+            fieldNumber: 1,
+          },
+          daoId: {
+            dataType: "bytes",
+            fieldNumber: 2,
+          },
+        }
+      }
+    }
+  }
+}
+
+export const daoProposalsStoreSchema = {
+  $id: "lisk/dao/proposal/link",
+  type: "object",
+  required: ["proposals"],
+  properties: {
+    proposals: {
+      type: "array",
+      fieldNumber: 1,
+      items: {
+        type: "object",
+        required: ['id', 'nonce'],
+        properties: {
+          id: {
+            dataType: "bytes",
+            fieldNumber: 1,
+          },
+          nonce: {
+            dataType: "uint64",
+            fieldNumber: 2,
+          },
+        }
+      }
     }
   }
 }
@@ -254,7 +366,7 @@ export const createProposalSchema = {
       fieldNumber: 1,
     },
     description: {
-      dataType: "bytes",
+      dataType: "string",
       fieldNumber: 2,
       minLength: 5,
       maxLength: 140,
@@ -262,11 +374,11 @@ export const createProposalSchema = {
     options: {
       type: "array",
       fieldNumber: 3,
+      minItems: 0,
+      maxItems: 10,
       items: {
         type: "object",
-        required: ["label", "id"],
-        minItems: 2,
-        maxItems: 10,
+        required: ["label"],
         properties: {
           label: {
             dataType: "string",
@@ -288,6 +400,7 @@ export const createProposalSchema = {
         allowedOptions: {
           dataType: "uint32",
           fieldNumber: 1,
+          minimum: 2,
         },
         quorum: {
           dataType: "uint32",
@@ -314,12 +427,14 @@ export const createProposalSchema = {
     actions: {
       type: "array",
       fieldNumber: 8,
+      minItems: 0,
+      maxItems: 5,
       items: {
         type: "object",
-        required: ["moduleID", "reducers", "params"],
+        required: ["moduleID", "reducers",],
         properties: {
           moduleID: {
-            dataType: "uin32",
+            dataType: "uint32",
             fieldNumber: 1,
           },
           reducers: {
@@ -327,8 +442,28 @@ export const createProposalSchema = {
             fieldNumber: 2,
           },
           params: {
-            dataType: "object",
+            type: "array",
             fieldNumber: 3,
+            minItems: 0,
+            items: {
+              type: "object",
+              required: ["k", "v", "paramType"],
+              properties: {
+                k: {
+                  dataType: 'string',
+                  fieldNumber: 1,
+                },
+                v: {
+                  dataType: 'string',
+                  fieldNumber: 2
+                },
+                paramType: {
+                  dataType: 'string',
+                  fieldNumber: 3,
+                  enum: ["string", "uint32", "uint64", "sint64", "boolean", "bytes"],
+                }
+              }
+            }
           },
           acceptor: {
             dataType: "bytes",

@@ -40,6 +40,7 @@ export class CreateDao extends BaseAsset {
     });
 
     senderAccount.dao.owned.push(dao.id);
+    // TODO: update dao.member[] all members from dao creation
     await stateStore.account.set(transaction.senderAddress, senderAccount);
     await addDao(stateStore, dao);
   }

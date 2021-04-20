@@ -25,7 +25,7 @@ await tb
     .setAssets({username: "test1"})
     .send('test1')
 
-  await tb.wait(1)
+  await tb.wait(0)
 
   console.log(await tb
     .setModuleAssetId(3500, 0)
@@ -34,8 +34,31 @@ await tb
       members: [],
       rules: {}
     })
+    // .validateSchema()
     .send('test')
   )
+
+  await tb.wait(0)
+
+  console.log('Create proposal', await tb
+    .setModuleAssetId(3500, 1)
+    .setAssets({
+      dao: new Buffer.from('a7937b64b8caa58f03721bb6bacf5c78cb235febe0e70b1b84cd99541461a08e', 'hex'),
+      description: "Test proposal 1",
+      nonce: BigInt(0),
+      start: 60,
+      end: 120,
+      options: [],
+      rules: {},
+      actions: [],
+    })
+      // .validateSchema()
+    .send('test')
+  )
+
+  console.log(await tb.callAction('dao:getAllDaos', {offset: 0, limit: 10}))
+
+
 
 }
 

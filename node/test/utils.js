@@ -44,6 +44,10 @@ export class TransactionBuilder {
     this.registeredModules = nodeInfo.registeredModules;
   }
 
+  callAction = async (action, params) => {
+    return await this.wsClientCache.invoke(action, params)
+  }
+
   setPassphrase(phrase) {
     this.passphrase = phrase;
     this.keys = cryptography.getPrivateAndPublicKeyFromPassphrase(

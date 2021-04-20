@@ -44,6 +44,10 @@ export class ExtendedAPIPlugin extends BasePlugin {
     this._app.use(cors({origin: "*", methods: ["GET", "POST", "PUT"]}));
     this._app.use(express.json());
 
+    this._app.get("/api/actions/:module/:action", async (_req, res) => {
+      console.log(this._channel.actions)
+    })
+
     this._app.get("/api/transactions", async (_req, res) => {
       const transactions = await getAllTransactions(this._db, this.schemas);
 
