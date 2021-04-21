@@ -86,6 +86,29 @@ const findDaoById = async (stateStore, daoId) => {
   );
 }
 
+const addMember = async (stateStore, {daoId, address, nonce, isDao}) => {
+  const foundDao = await findDaoById(stateStore, daoId)
+  if (!foundDao) {
+    throw new Error(`Dao not found ${daoId}`);
+  }
+  await stateStore.chain.set(
+    `${CHAIN_STATE_DAO}:${daoId.toString('hex')}`,
+    codec.encode(daoAssetSchema, {
+      ...foundDao,
+      members: [
+        ...foundDao.members,
+        {
+          id: address,
+          nonce,
+          isDao: !!isDao,
+          isOwner: false,
+          removedAt: 0,
+        }
+      ]
+    }),
+  )
+}
+
 const updateDao = async (stateStore, dao) => {
   const foundDao = await findDao(stateStore, dao.name)
   if (!foundDao) {
@@ -147,4 +170,5 @@ export {
   getAllDaosAsJSON,
   getDao,
   getAllDaos,
+  addMember,
 }

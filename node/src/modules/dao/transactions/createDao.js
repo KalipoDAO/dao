@@ -24,12 +24,14 @@ export class CreateDao extends BaseAsset {
           nonce: BigInt(0),
           isDao: m.isDao || false,
           isOwner: false,
+          removedAt: 0,
         })),
         {
           id: transaction.senderAddress,
           nonce: BigInt(0),
           isDao: false,
           isOwner: true,
+          removedAt: 0,
         }
       ],
       rules: {

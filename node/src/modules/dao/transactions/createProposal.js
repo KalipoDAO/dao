@@ -2,6 +2,7 @@ import {BaseAsset, cryptography} from 'lisk-sdk';
 import {findDao, findDaoById, updateDao,} from "../daoAsset";
 import {createProposalSchema} from "../index";
 import {addProposal, createProposal} from "../proposalAsset";
+import {isAllowedAction, isDaoMember} from "../utils";
 
 export class CreateProposal extends BaseAsset {
   name = "createProposal";
@@ -14,6 +15,8 @@ export class CreateProposal extends BaseAsset {
     if (!foundDao) {
       throw new Error(`DAO couldn't be found with id: ${asset.dao}.`);
     }
+
+    isDaoMember(foundDao, transaction.senderAddress)
 
     if (!asset.options || asset.options.length === 0) {
       asset.options = [
@@ -35,6 +38,15 @@ export class CreateProposal extends BaseAsset {
       asset.rules.quorum = foundDao.rules.quorum
       asset.rules.minToWin = foundDao.rules.minQuorum
     }
+
+    if (asset.actions) {
+      asset.actions.map(action => {
+        if (!isAllowedAction(action)) {
+          throw new Error(`Action module: ${action.module}, reducers: ${action.reducers} is not allowed.`);
+        }
+      })
+    }
+
     const daoId = new Buffer.from(asset.dao, 'hex');
     const proposal = createProposal({
       creator: senderAccount.address,

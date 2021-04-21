@@ -1,13 +1,16 @@
 import { BaseModule } from 'lisk-sdk';
-import { CreateDao, CreateProposal } from "./transactions";
-import {getAllDaosAsJSON, getDao} from "./daoAsset";
+import {AcceptAction, CreateDao, CreateProposal, Vote} from "./transactions";
+import {addMember, getAllDaosAsJSON, getDao} from "./daoAsset";
 import {getAllProposalsAsJSON, getAllProposalsByDaoAsJSON, getProposal} from "./proposalAsset";
 
 export class DaoModule extends BaseModule {
   name = 'dao';
   id = 3500;
   transactionAssets = [
-    new CreateDao(), new CreateProposal(),
+    new CreateDao(),
+    new CreateProposal(),
+    new Vote(),
+    new AcceptAction(),
   ];
   accountSchema = {
     type: "object",
@@ -47,7 +50,7 @@ export class DaoModule extends BaseModule {
   }
 
   reducers = {
-    // addMember: async (params, stateStore) => addMember({params, stateStore}),
+    addMember: async (params, stateStore) => addMember(stateStore, params),
     // removeMember: async (params, stateStore) => removeMember({params, stateStore}),
     // updateRule: async (params, stateStore) => updateRule({params, stateStore}),
   }

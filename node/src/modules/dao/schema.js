@@ -43,6 +43,11 @@ export const daoAssetSchema = {
             fieldNumber: 4,
             default: false,
           },
+          removedAt: {
+            dataType: "uint32",
+            fieldNumber: 5,
+            default: 0,
+          }
         }
       }
     },
@@ -203,10 +208,10 @@ export const proposalAssetSchema = {
       maxItems: 5,
       items: {
         type: "object",
-        required: ["moduleID", "reducers",],
+        required: ["module", "reducers", "condition"],
         properties: {
-          moduleID: {
-            dataType: "uint32",
+          module: {
+            dataType: "string",
             fieldNumber: 1,
           },
           reducers: {
@@ -233,7 +238,7 @@ export const proposalAssetSchema = {
                   dataType: 'string',
                   fieldNumber: 3,
                   enum: ["string", "uint32", "uint64", "sint64", "boolean", "bytes"],
-                }
+                },
               }
             }
           },
@@ -242,6 +247,60 @@ export const proposalAssetSchema = {
             fieldNumber: 4,
             minLength: 20,
             maxLength: 20,
+          },
+          condition: {
+            type: "object",
+            fieldNumber: 5,
+            required: ["option", "operator"],
+            properties: {
+              option: {
+                dataType: "bytes",
+                fieldNumber: 1,
+              },
+              operator: {
+                dataType: "string",
+                fieldNumber: 2,
+                enum: ["win", "lose",]
+              }
+            }
+          },
+        }
+      }
+    },
+    votes: {
+      type: "array",
+      fieldNumber: 11,
+      items: {
+        type: "object",
+        required: ["options", "member"],
+        properties: {
+          options: {
+            type: "array",
+            fieldNumber: 1,
+            items: {
+              type: "object",
+              required: ["id", "value"],
+              properties: {
+                id: {
+                  dataType: "bytes",
+                  fieldNumber: 1,
+                },
+                value: {
+                  dataType: "uint64",
+                  fieldNumber: 2,
+                },
+                valueType: {
+                  dataType: "string",
+                  fieldNumber: 3,
+                  enum: ["count", "weight"],
+                  default: "count"
+                }
+              }
+            }
+          },
+          member: {
+            dataType: "bytes",
+            fieldNumber: 2,
           }
         }
       }
@@ -431,10 +490,10 @@ export const createProposalSchema = {
       maxItems: 5,
       items: {
         type: "object",
-        required: ["moduleID", "reducers",],
+        required: ["module", "reducers", "condition"],
         properties: {
-          moduleID: {
-            dataType: "uint32",
+          module: {
+            dataType: "string",
             fieldNumber: 1,
           },
           reducers: {
@@ -470,10 +529,26 @@ export const createProposalSchema = {
             fieldNumber: 4,
             minLength: 20,
             maxLength: 20,
-          }
+          },
+          condition: {
+            type: "object",
+            fieldNumber: 5,
+            required: ["option", "operator"],
+            properties: {
+              option: {
+                dataType: "bytes",
+                fieldNumber: 1,
+              },
+              operator: {
+                dataType: "string",
+                fieldNumber: 2,
+                enum: ["win", "lose",]
+              }
+            }
+          },
         }
-      }
-    }
+      },
+    },
   }
 }
 
@@ -503,7 +578,7 @@ export const voteSchema = {
             fieldNumber: 1,
           },
           value: {
-            dataType: "uint32",
+            dataType: "uint64",
             fieldNumber: 2,
           }
         }

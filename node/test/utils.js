@@ -127,7 +127,7 @@ export class TransactionBuilder {
       await this.sign();
       return await this.wsClientCache.transaction.send(this.signedTransaction)
     } catch (e) {
-      return e
+      return e.message
     }
   }
 

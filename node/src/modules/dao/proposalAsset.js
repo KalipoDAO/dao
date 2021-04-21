@@ -110,7 +110,7 @@ const findProposal = async (stateStore, daoId, nonce) => {
 
 const findProposalById = async (stateStore, proposalId) => {
   const proposalBuffer = await stateStore.chain.get(
-    `${CHAIN_STATE_PROPOSAL}:${proposalId}`,
+    `${CHAIN_STATE_PROPOSAL}:${proposalId.toString('hex')}`,
   );
 
   if (!proposalBuffer) {
@@ -141,6 +141,46 @@ const updateProposal = async (stateStore, proposal, daoId) => {
   )
 }
 
+const updateVotes = async (stateStore, proposalId, asset, member) => {
+  const foundProposal = await findProposalById(stateStore, proposalId)
+  if (!foundProposal) {
+    throw new Error(`Proposal was not found on the blockchain`);
+  }
+
+  const updatedProposal = {
+    ...foundProposal,
+    votes: [
+      ...foundProposal.votes,
+      {
+        options: asset.options,
+        member,
+      }
+    ]
+  }
+
+  await stateStore.chain.set(
+    `${CHAIN_STATE_PROPOSAL}:${proposalId.toString('hex')}`,
+    codec.encode(proposalAssetSchema, updatedProposal),
+  )
+}
+
+const resolveProposal = async (stateStore, proposalId) => {
+  const foundProposal = await findProposalById(stateStore, proposalId)
+  if (!foundProposal) {
+    throw new Error(`Proposal was not found on the blockchain`);
+  }
+
+  const updatedProposal = {
+    ...foundProposal,
+    state: "resolved"
+  }
+
+  await stateStore.chain.set(
+    `${CHAIN_STATE_PROPOSAL}:${proposalId.toString('hex')}`,
+    codec.encode(proposalAssetSchema, updatedProposal),
+  )
+}
+
 const addProposal = async (stateStore, proposal, daoId) => {
   const foundProposal = await findProposalById(stateStore, proposal.id)
   if (foundProposal) {
@@ -155,6 +195,7 @@ const addProposal = async (stateStore, proposal, daoId) => {
     id: proposal.id,
     daoId: daoId,
   })
+
 
   await stateStore.chain.set(
     CHAIN_STATE_PROPOSALS,
@@ -185,8 +226,11 @@ const addProposal = async (stateStore, proposal, daoId) => {
       end: proposal.end,
       actions: proposal.actions,
       state: proposal.state,
+      votes: [],
     })
   )
+
+
 }
 
 export {
@@ -204,4 +248,6 @@ export {
   getAllProposalsByDaoAsJSON,
   getProposal,
   getAllProposalsByDao,
+  updateVotes,
+  resolveProposal,
 }
