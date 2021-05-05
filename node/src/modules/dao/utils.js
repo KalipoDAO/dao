@@ -8,6 +8,7 @@ const allowedModules = [
 ]
 
 export const isAllowedAction = (action) => {
+  // todo check member already is in
   const allowedModule = allowedModules.find(am => am.module === action.module);
   return allowedModule || allowedModule.reducers.find(r => r === action.reducers)
 }

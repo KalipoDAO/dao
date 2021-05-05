@@ -1,6 +1,7 @@
 import {ExtendedAPIPlugin} from "./plugins";
 import {Application, configDevnet, genesisBlockDevnet, HTTPAPIPlugin, utils,} from 'lisk-sdk';
-import {SprinklerModule, DaoModule} from "./modules";
+import {SprinklerModule} from "@moosty/lisk-sprinkler"
+import { DaoModule} from "./modules";
 import {DPoSModule, KeysModule, SequenceModule, TokenModule} from "lisk-framework";
 
 genesisBlockDevnet.header.asset.accounts = genesisBlockDevnet.header.asset.accounts

@@ -217,6 +217,14 @@
     semver "7.1.3"
     validator "12.2.0"
 
+"@moosty/lisk-sprinkler@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@moosty/lisk-sprinkler/-/lisk-sprinkler-0.1.0.tgz#5bfbf0d8bb8baee189101a4ec475feb69253a5af"
+  integrity sha512-uKxGdbav6oXkaWkuXfmuZPyYDy2Y3GUhLSwiSUTKUgs5A+XWJaTzMqP+/gZeH+GWVbm8Cx1sifh7kIVKTEF2FQ==
+  dependencies:
+    lisk-sdk "^5.0.4"
+    tslib "^1.10.0"
+
 "@types/node@*":
   version "14.14.40"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.40.tgz#05a7cd31154487f357ca0bec4334ed1b1ab825a0"
@@ -1482,6 +1490,11 @@ toidentifier@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
   integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
+
+tslib@^1.10.0:
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
+  integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
 tweetnacl@1.0.3, tweetnacl@1.x.x:
   version "1.0.3"

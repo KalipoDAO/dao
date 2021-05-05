@@ -185,6 +185,7 @@ const addProposal = async (stateStore, proposal, daoId) => {
   const foundProposal = await findProposalById(stateStore, proposal.id)
   if (foundProposal) {
     updateProposal(stateStore, proposal, daoId)
+    return
   }
   if (!proposal.id) {
     proposal = createProposal(proposal, daoId)
@@ -227,6 +228,7 @@ const addProposal = async (stateStore, proposal, daoId) => {
       actions: proposal.actions,
       state: proposal.state,
       votes: [],
+      dao: proposal.dao,
     })
   )
 

@@ -58,13 +58,15 @@ export class CreateProposal extends BaseAsset {
         ...asset.rules,
       },
       nonce: BigInt(foundDao.nonce),
-      start: asset.start,
+      start: asset.start, // todo check minimum blocks current time
       end: asset.end,
       state: "unresolved",
       actions: [
         ...asset.actions,
-      ]
+      ],
+      dao: foundDao.id,
     }, daoId);
+
     await updateDao(stateStore, {...foundDao, nonce: BigInt(foundDao.nonce) + BigInt(1)})
     await addProposal(stateStore, proposal, daoId);
   }

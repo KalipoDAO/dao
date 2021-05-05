@@ -1,0 +1,50 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@craco/craco": "^6.1.2",
+    "@liskhq/lisk-client": "^5.0.4",
+    "@moosty/dao-storybook": "https://github-registry-files.githubusercontent.com/358167819/572fb080-acea-11eb-94f4-0637a1124f7d?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210504%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210504T152210Z&X-Amz-Expires=300&X-Amz-Signature=ce0bcc4e5153158103afa039fdd319c61665a14a0233fd4e0af743ec7c835d43&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=358167819&response-content-disposition=filename%3Ddao-storybook-0.1.10-npm.tgz&response-content-type=application%2Foctet-stream",
+    "@tailwindcss/forms": "^0.3.2",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "axios": "^0.21.1",
+    "postcss-import": "^14.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "4.0.3",
+    "web-vitals": "^1.0.1"
+  },
+  "scripts": {
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^9",
+    "postcss": "^7",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat"
+  }
+}

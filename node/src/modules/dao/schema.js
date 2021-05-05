@@ -305,6 +305,10 @@ export const proposalAssetSchema = {
         }
       }
     },
+    dao: {
+      dataType: "bytes",
+      fieldNumber: 12,
+    }
   }
 }
 
