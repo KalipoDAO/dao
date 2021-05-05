@@ -3,14 +3,12 @@ import {PlusIcon} from "@heroicons/react/solid";
 import {Button, NavBar} from "@moosty/dao-storybook";
 import {useHistory, useLocation} from "react-router-dom";
 
-export const NavBarContainer = () => {
+export const NavBarContainer = ({onLoginClick, onRegisterClick, onSignOut, user}) => {
   const history = useHistory();
   const location = useLocation();
   const [navBarArgs, setNavBarArgs] = useState({
-    user: {
-      name: "Raphael",
-      address: "klasjdflkasjdf",
-    },
+    onLoginClick,
+    onRegisterClick,
     logo: <img src={"/logo192.png"} className="h-10"/>,
     navigation: [
       {
@@ -41,7 +39,7 @@ export const NavBarContainer = () => {
     userNavigation: [
       {name: 'Create a Dao', href: () => alert("Create a dao")},
       {name: 'Create a voting', href: () => alert("Create a voting")},
-      {name: 'Sign out', href: () => alert("Sign out")},
+      {name: 'Sign out', href: () => onSignOut()},
     ],
     invitations: [
       {
@@ -61,6 +59,21 @@ export const NavBarContainer = () => {
       ...newNavArgs,
     })
   }, [location]);
+
+  useEffect(() => {
+    if (user) {
+      setNavBarArgs({
+        ...navBarArgs,
+        user: {
+          ...user,
+        }
+      })
+    } else {
+      const newNavBarArgs = {...navBarArgs}
+      delete newNavBarArgs.user;
+      setNavBarArgs({...newNavBarArgs})
+    }
+  }, [user])
 
   return (<NavBar
     {...navBarArgs}

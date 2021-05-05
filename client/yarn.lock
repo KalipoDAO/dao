@@ -1654,9 +1654,9 @@
     semver "7.1.3"
     validator "12.2.0"
 
-"@moosty/dao-storybook@https://github-registry-files.githubusercontent.com/358167819/572fb080-acea-11eb-94f4-0637a1124f7d?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210504%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210504T152210Z&X-Amz-Expires=300&X-Amz-Signature=ce0bcc4e5153158103afa039fdd319c61665a14a0233fd4e0af743ec7c835d43&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=358167819&response-content-disposition=filename%3Ddao-storybook-0.1.10-npm.tgz&response-content-type=application%2Foctet-stream":
-  version "0.1.10"
-  resolved "https://github-registry-files.githubusercontent.com/358167819/572fb080-acea-11eb-94f4-0637a1124f7d?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210504%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210504T152210Z&X-Amz-Expires=300&X-Amz-Signature=ce0bcc4e5153158103afa039fdd319c61665a14a0233fd4e0af743ec7c835d43&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=358167819&response-content-disposition=filename%3Ddao-storybook-0.1.10-npm.tgz&response-content-type=application%2Foctet-stream#ef0aab2b6e72fda9eb844a021eed4364b3ac080b"
+"@moosty/dao-storybook@https://github-registry-files.githubusercontent.com/358167819/3aa87c80-adad-11eb-9ec7-1e4260c67ee9?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210505%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210505T142200Z&X-Amz-Expires=300&X-Amz-Signature=fd1b476f7f7ea0080b17b399927487b446f0ede0cff36f4edf64c8b1f8ba5bda&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=358167819&response-content-disposition=filename%3Ddao-storybook-0.1.14-npm.tgz&response-content-type=application%2Foctet-stream":
+  version "0.1.14"
+  resolved "https://github-registry-files.githubusercontent.com/358167819/3aa87c80-adad-11eb-9ec7-1e4260c67ee9?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210505%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210505T142200Z&X-Amz-Expires=300&X-Amz-Signature=fd1b476f7f7ea0080b17b399927487b446f0ede0cff36f4edf64c8b1f8ba5bda&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=358167819&response-content-disposition=filename%3Ddao-storybook-0.1.14-npm.tgz&response-content-type=application%2Foctet-stream#34e643cd8e88dc3e49bcc4c1a417f15ac873787a"
   dependencies:
     "@craco/craco" "^6.1.1"
     "@headlessui/react" "^1.0.0"
@@ -1670,6 +1670,7 @@
     postcss-import "^14.0.1"
     react "^17.0.2"
     react-circular-progressbar "^2.0.4"
+    react-copy-to-clipboard "^5.0.3"
     react-dom "^17.0.2"
     react-scripts "4.0.3"
     storybook-addon-themes "^6.1.0"
@@ -4221,6 +4222,13 @@ copy-descriptor@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
   integrity sha1-Z29us8OZl8LuGsOpJP1hJHSPV40=
+
+copy-to-clipboard@^3:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/copy-to-clipboard/-/copy-to-clipboard-3.3.1.tgz#115aa1a9998ffab6196f93076ad6da3b913662ae"
+  integrity sha512-i13qo6kIHTTpCm8/Wup+0b1mVWETvu2kIMzKoK8FpkLkFxlt0znUAHcMzox+T8sPlqtZXq3CulEjQHsYiGFJUw==
+  dependencies:
+    toggle-selection "^1.0.6"
 
 core-js-compat@^3.6.2, core-js-compat@^3.8.0:
   version "3.9.0"
@@ -10009,7 +10017,7 @@ prompts@2.4.0, prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.8, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -10223,6 +10231,14 @@ react-colorful@^5.0.1:
   version "5.1.4"
   resolved "https://registry.yarnpkg.com/react-colorful/-/react-colorful-5.1.4.tgz#7391568db7c0a4163436bfb076e5da8ef394e87c"
   integrity sha512-WOEpRNz8Oo2SEU4eYQ279jEKFSjpFPa9Vi2U/K0DGwP9wOQ8wYkJcNSd5Qbv1L8OFvyKDCbWekjftXaU5mbmtg==
+
+react-copy-to-clipboard@^5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/react-copy-to-clipboard/-/react-copy-to-clipboard-5.0.3.tgz#2a0623b1115a1d8c84144e9434d3342b5af41ab4"
+  integrity sha512-9S3j+m+UxDZOM0Qb8mhnT/rMR0NGSrj9A/073yz2DSxPMYhmYFBMYIdI2X4o8AjOjyFsSNxDRnCX6s/gRxpriw==
+  dependencies:
+    copy-to-clipboard "^3"
+    prop-types "^15.5.8"
 
 react-dev-utils@^11.0.3:
   version "11.0.4"
@@ -12043,6 +12059,11 @@ to-regex@^3.0.1, to-regex@^3.0.2:
     extend-shallow "^3.0.2"
     regex-not "^1.0.2"
     safe-regex "^1.1.0"
+
+toggle-selection@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/toggle-selection/-/toggle-selection-1.0.6.tgz#6e45b1263f2017fa0acc7d89d78b15b8bf77da32"
+  integrity sha1-bkWxJj8gF/oKzH2J14sVuL932jI=
 
 toidentifier@1.0.0:
   version "1.0.0"

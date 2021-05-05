@@ -217,10 +217,10 @@
     semver "7.1.3"
     validator "12.2.0"
 
-"@moosty/lisk-sprinkler@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@moosty/lisk-sprinkler/-/lisk-sprinkler-0.1.0.tgz#5bfbf0d8bb8baee189101a4ec475feb69253a5af"
-  integrity sha512-uKxGdbav6oXkaWkuXfmuZPyYDy2Y3GUhLSwiSUTKUgs5A+XWJaTzMqP+/gZeH+GWVbm8Cx1sifh7kIVKTEF2FQ==
+"@moosty/lisk-sprinkler@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@moosty/lisk-sprinkler/-/lisk-sprinkler-0.1.7.tgz#669fa5c7b63b2115f6c0ff778a542c74c709901b"
+  integrity sha512-Vu6hef3Ap7cUOqn1H/OUNUt1+cx/dsaNsTm6XJvo0o31+evKJXxE6yXGlJhBS1oFVDEAFY9cMG7NsGUpNlx0ug==
   dependencies:
     lisk-sdk "^5.0.4"
     tslib "^1.10.0"

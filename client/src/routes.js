@@ -1,33 +1,55 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {BrowserRouter as Router, Route, Switch,} from "react-router-dom";
 import * as Views from "./views";
 import {NavBarContainer} from "./containers/NavBar";
 import {PageTop} from "./containers/PageTop";
+import {ModalContainer} from "./containers/Modal";
+import {useAuth} from "./hooks/auth";
 
 export const Routes = () => {
+  const [currentOpen, setCurrentOpen] = useState();
+  const {account, onLogin, onRegister, registerError, loadingSprinkler, onSignOut} = useAuth(setCurrentOpen);
+
+  useEffect(() => {
+    console.log(account)
+  }, [account])
+
   return (
     <Router>
-      <NavBarContainer/>
+      <NavBarContainer
+        onSignOut={() => onSignOut()}
+        user={account}
+        onLoginClick={() => setCurrentOpen("login")}
+        onRegisterClick={() => setCurrentOpen("register")}
+      />
       <div className="w-full md:w-app mx-auto">
         <PageTop/>
         <Switch>
           <Route path={"/daos"}>
-            <Views.Home/>
+            <Views.Home account={account}/>
           </Route>
           <Route path={"/members"}>
-            <Views.Home/>
+            <Views.Home account={account}/>
           </Route>
           <Route path={"/votings/:args"}>
-            <Views.Home/>
+            <Views.Home account={account}/>
           </Route>
           <Route path={"/votings"}>
-            <Views.Home/>
+            <Views.Home account={account}/>
           </Route>
           <Route path={"/"}>
-            <Views.Home/>
+            <Views.Home account={account}/>
           </Route>
         </Switch>
       </div>
+      <ModalContainer
+        currentOpen={currentOpen}
+        setCurrentOpen={setCurrentOpen}
+        onLogin={onLogin}
+        onRegister={onRegister}
+        externalError={registerError}
+        ctaLoading={loadingSprinkler}
+      />
     </Router>
   )
 }
