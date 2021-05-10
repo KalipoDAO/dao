@@ -58,7 +58,7 @@ export const CreateDao = ({account, setModal}) => {
         name: formData.name,
         members: [
           ...formData.members.map(m => m?.value?.address && ({
-            id: Buffer.from(m.value.address, 'hex'),
+            id: new Buffer.from(m.value.address, 'hex'),
             isDao: false,
           })).filter(Boolean),
         ],

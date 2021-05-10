@@ -9,25 +9,11 @@ export const createTransaction = async ({
                                           assets,
                                           client,
                                         }) => {
-
-  const {publicKey, address} = account;
-  let chainAccount
-  try {
-    chainAccount = await client.invoke("app:account:get", {address: new Buffer.from(address, 'hex')});
-  } catch (e) {
-    if (moduleId === 6666) {
-      chainAccount = {
-        sequence: {
-          nonce: 0,
-        }
-      }
-    }
-  }
-
+  const {publicKey} = account;
   const transactionObject = {
     moduleID: moduleId,
     assetID: assetId,
-    nonce: BigInt(chainAccount?.sequence?.nonce),
+    nonce: BigInt(0),
     fee: BigInt(transactions.convertLSKToBeddows('0.01')),
     senderPublicKey: publicKey,
     asset: {
@@ -36,26 +22,40 @@ export const createTransaction = async ({
   }
   const assetSchema = client.schemas.transactionsAssets
     .find(s => s.moduleID === moduleId && s.assetID === assetId)
-  console.log(client.schemas.transactionsAssets, assetSchema)
   const schema = assetSchema.schema;
   const fee = transactions.computeMinFee(schema, transactionObject)
-  console.log(client._nodeInfo.networkIdentifier)
-  const signedTransaction = transactions.signTransaction(
-    schema,
-    {...transactionObject, fee},
-    new Buffer.from(client._nodeInfo.networkIdentifier, 'hex'),
-    account.passphrase.join(" "),
-  )
-  console.log(signedTransaction)
-  const {id, ...rest} = signedTransaction;
-  console.log(codec)
+
+  let signedTransaction, tx;
+  if (moduleId !== 6666) {
+    tx = await client.transaction.create({
+      moduleID: moduleId,
+      assetID: assetId,
+      fee: fee,
+      asset: {
+        ...assets
+      },
+    }, account.passphrase.join(" "));
+  } else {
+
+    signedTransaction = transactions.signTransaction(
+      schema,
+      {...transactionObject, fee},
+      new Buffer.from(client._nodeInfo.networkIdentifier, 'hex'),
+      account.passphrase.join(" "),
+    )
+  }
   let result = {
     status: false,
     message: null,
   };
   try {
     result.status = true;
-    result.message = await client.transaction.send(codec.codec.fromJSON(getFullAssetSchema(schema), rest))
+    if (moduleId === 6666) {
+      const {id, ...rest} = signedTransaction;
+      result.message = await client.transaction.send(codec.codec.fromJSON(getFullAssetSchema(schema), rest))
+    } else {
+      result.message = await client.transaction.send(tx)
+    }
   } catch ({message}) {
     result.status = false;
     result.message = message;

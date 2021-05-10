@@ -44,10 +44,10 @@ export class CreateDao extends BaseAsset {
     });
 
     senderAccount.dao.owned.push(dao.id);
-    await Promise.all(asset.members.map(async member => {
-      await stateStore.invoke("dao:addDaoToAccount", {daoId: dao.id, address: member.address})
-    }))
 
+    await Promise.all(asset.members.map(async member => {
+      await reducerHandler.invoke("dao:addDaoToAccount", {daoId: dao.id, address: member.id})
+    }))
     await stateStore.account.set(transaction.senderAddress, senderAccount);
     await addDao(stateStore, dao);
   }

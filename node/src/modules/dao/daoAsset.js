@@ -88,7 +88,7 @@ const findDaoById = async (stateStore, daoId) => {
 
 const addDaoToAccount = async (stateStore, {daoId, address}) => {
   const account = await stateStore.account.get(address);
-  account.dao.members.push(daoId)
+  account.dao.member.push(daoId)
   await stateStore.account.set(address, account);
 }
 
