@@ -44,7 +44,6 @@ export const CreateDao = ({account, setModal}) => {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    console.log(formData.members.filter(m => !!m.value).length === 0, formData.members.filter(m => !!m.value), formData.members.filter(m => !!m.value)?.length === 0 || !formData?.name || !formData?.description || formErrors?.name || formErrors?.description)
     let errors = {}
     if (formData?.name) {
       const nameRegex = /^(?=.{3,50}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/

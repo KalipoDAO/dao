@@ -30,6 +30,9 @@ export const Routes = () => {
           <Route path={"/create-dao"}>
             <Views.CreateDao account={account} setModal={setCurrentOpen}/>
           </Route>
+          <Route path={"/create-dao-proposal"}>
+            <Views.CreateVoting account={account} setModal={setCurrentOpen}/>
+          </Route>
           <Route path={"/daos"}>
             <Views.Home account={account}/>
           </Route>
