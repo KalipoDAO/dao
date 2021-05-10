@@ -20,7 +20,7 @@ export class CreateDao extends BaseAsset {
       ...asset,
       nonce: BigInt(0),
       members: [
-        ...asset.members.filter(m => m.id === senderAddress).map(m => ({
+        ...asset.members.filter(m => !m.id.equals(transaction.senderAddress)).map(m => ({
           id: new Buffer.from(m.id, 'hex'),
           nonce: BigInt(0),
           isDao: m.isDao || false,

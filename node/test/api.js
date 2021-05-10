@@ -16,6 +16,7 @@ const run = async () => {
   console.log(await tb.callAction('dao:getProposal', {id: "5cc2eb31a569fd3ead0e1d10ad766eb0ce75d56f24b9fcb08f9aeee4505c938e"}))
   console.log(await tb.callAction('dao:getProposal', {id: "065bade9a9e5da20a5445ee3aeb9cea6c702633b98128b81463d97827d823f88"}))
   console.log(await tb.callAction('dao:getDao', {id: "16367aacb67a4a017c8da8ab95682ccb390863780f7114dda0a0e0c55644c7c4"}))
+  console.log(JSON.stringify(await tb.callAction('dao:getAllDaos', {offset: 0, limit: 20}), null, 2))
 
 
 }

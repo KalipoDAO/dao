@@ -1,6 +1,14 @@
 import React, {useEffect, useState} from "react";
-import {passphrase, cryptography} from "@liskhq/lisk-client";
-import {Typography, Modal, CreateAccountModal, LoginModal} from '@moosty/dao-storybook';
+import {cryptography, passphrase} from "@liskhq/lisk-client";
+import {
+  ConfirmTransactionModal,
+  CreateAccountModal,
+  LoginModal,
+  Modal,
+  ResultTransactionModal,
+  Typography
+} from '@moosty/dao-storybook';
+
 export const ModalContainer = ({currentOpen, setCurrentOpen, externalError, ctaLoading, onLogin, onRegister}) => {
 
   const [registerAccounts, setRegisterAccounts] = useState();
@@ -52,7 +60,7 @@ export const ModalContainer = ({currentOpen, setCurrentOpen, externalError, ctaL
         setDisabledCTA(true)
         break;
       default:
-        setDisabledCTA(true)
+        setDisabledCTA(currentOpen?.type !== "transactionConfirm")
     }
   }, [currentOpen])
 
@@ -63,13 +71,15 @@ export const ModalContainer = ({currentOpen, setCurrentOpen, externalError, ctaL
   })
 
   return <Modal
-    ctaButton={(currentOpen === 'login' || currentOpen === 'register') && {
+    ctaButton={(currentOpen === 'login' || currentOpen === 'register' || currentOpen?.type === "transactionConfirm") && {
       disabled: disabledCTA || ctaLoading,
       label: [
         !ctaLoading && currentOpen === 'login' && "Sign in!",
         !ctaLoading && currentOpen === 'register' && "Sign up!",
+        !ctaLoading && currentOpen?.type === "transactionConfirm" && !currentOpen?.ctaButton?.label && "Confirm",
+        !ctaLoading && currentOpen?.ctaButton?.label,
         ctaLoading && "Loading...",
-        ].filter(Boolean).join(),
+      ].filter(Boolean).join(),
       onClick: () => {
         if (currentOpen === 'login') {
           onLogin(account)
@@ -79,6 +89,9 @@ export const ModalContainer = ({currentOpen, setCurrentOpen, externalError, ctaL
             ...account,
             username,
           })
+        }
+        if (currentOpen?.type === "transactionConfirm") {
+          currentOpen?.ctaButton?.onClick && currentOpen.ctaButton.onClick()
         }
       },
     }}
@@ -98,6 +111,19 @@ export const ModalContainer = ({currentOpen, setCurrentOpen, externalError, ctaL
     {currentOpen === 'login' && <LoginModal
       gotoSignup={() => setCurrentOpen("register")}
       changePassphrase={setPassphrase}
+    />}
+    {currentOpen?.type === 'transactionConfirm' && <ConfirmTransactionModal
+      address={currentOpen.address}
+      name={currentOpen.name}
+      transaction={{
+        fee: currentOpen.fee,
+        type: currentOpen.transactionType,
+      }}
+    />}
+    {currentOpen?.type === 'transactionResult' && <ResultTransactionModal
+      transactionId={currentOpen.id}
+      state={currentOpen.state}
+      text={currentOpen.text}
     />}
   </Modal>
 }

@@ -16,6 +16,7 @@ import {createTransaction} from "../utils/transactions";
 import {Buffer} from "@liskhq/lisk-client";
 import {transactionStates} from "@moosty/dao-storybook/dist/stories/modals/templates/resultTransaction";
 import {AppContext} from "../appContext";
+import {useHistory} from "react-router-dom";
 
 const defaultFormData = {
   members: [
@@ -33,12 +34,43 @@ const defaultFormData = {
 }
 
 export const CreateDao = ({account, setModal}) => {
+  const history = useHistory();
   const {getClient} = useContext(AppContext);
   const {members} = useMembers();
   const [formData, setFormData] = useState(defaultFormData);
   const [error, setError] = useState(null);
+  const [formErrors, setFormErrors] = useState(null);
   const [loadingCreate, setLoadingCreate] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    console.log(formData.members.filter(m => !!m.value).length === 0, formData.members.filter(m => !!m.value), formData.members.filter(m => !!m.value)?.length === 0 || !formData?.name || !formData?.description || formErrors?.name || formErrors?.description)
+    let errors = {}
+    if (formData?.name) {
+      const nameRegex = /^(?=.{3,50}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/
+      if (!formData?.name?.match(nameRegex)) {
+        errors.name = <div>
+          DAO name only allowed [a-zA-Z0-9._] <br/>
+          (do not start or end with _ or . nor use them double)
+        </div>
+      }
+      if (formData?.name?.length > 50) {
+        errors.name = "DAO name should be 50 characters or shorter"
+      }
+      if (formData?.name?.length < 3) {
+        errors.name = "DAO name should be at least 3 characters long"
+      }
+    }
+    if (formData.description) {
+      if (formData?.description?.length > 140) {
+        errors.description = "Description should be 140 characters or shorter"
+      }
+      if (formData?.description?.length < 3) {
+        errors.description = "Description should be at least 3 characters long"
+      }
+    }
+    setFormErrors(errors)
+  }, [formData])
 
   const updateFormData = (field, value) => {
     setFormData({
@@ -47,9 +79,46 @@ export const CreateDao = ({account, setModal}) => {
     })
   }
 
+  const onCreate = async () => {
+    const client = await getClient
+    const fee = await createTransaction({
+      moduleId: 3500,
+      assetId: 0,
+      assets: {
+        name: formData.name,
+        members: [
+          ...formData.members.map(m => m?.value?.address && ({
+            id: new Buffer.from(m.value.address, 'hex'),
+            isDao: false,
+          })).filter(Boolean),
+        ],
+        rules: {},
+        description: formData.description,
+      },
+      account,
+      client,
+      getFee: true,
+    })
+    setModal({
+      type: "transactionConfirm",
+      address: account.address,
+      name: account.username,
+      transactionType: "dao:create",
+      fee: `${fee} LSK`,
+      ctaButton: {
+        label: "Confirm",
+        onClick: () => onSubmit()
+      }
+    })
+  }
+
   const onSubmit = async () => {
     setLoadingCreate(true)
-    setModal("transactionConfirm", {text: `Your DAO is created successfully`, state: transactionStates.confirmed})
+    setModal({
+      type: "transactionResult",
+      text: `Submitting transaction, this can take a few seconds.`,
+      state: transactionStates.pending,
+    })
     const client = await getClient;
     const result = await createTransaction({
       moduleId: 3500,
@@ -69,28 +138,29 @@ export const CreateDao = ({account, setModal}) => {
       client,
     })
     if (result.status) {
-          const findTransaction = async () => {
-            try {
-              await client.transaction.get(Buffer.from(result.message.transactionId, 'hex'))
-              setError(null)
-              setLoadingCreate(false)
-              setSuccess(true)
-              setModal("transactionResult", {text: `Your DAO is created successfully`, state: transactionStates.confirmed})
-            } catch (e) {
-              setTimeout(async () => await findTransaction(), 1000)
-            }
-          }
-          await findTransaction()
+      const findTransaction = async () => {
+        try {
+          await client.transaction.get(Buffer.from(result.message.transactionId, 'hex'))
+          setError(null)
+          setLoadingCreate(false)
+          setSuccess(true)
+          setModal({
+            type: "transactionResult",
+            text: `Your DAO is created successfully`,
+            state: transactionStates.confirmed
+          })
+          history.push('/')
+        } catch (e) {
+          setTimeout(async () => await findTransaction(), 1000)
+        }
+      }
+      await findTransaction()
 
     } else {
       setError(result.message)
       setLoadingCreate(false)
-      setModal("transactionResult", {text: result.message, state: transactionStates.error})
+      setModal({type: "transactionResult", text: result.message, state: transactionStates.error})
     }
-    // }
-    // setLoadingSprinkler(true);
-    // doSprinkler();
-    alert(JSON.stringify(formData))
   }
 
   useEffect(() => {
@@ -119,7 +189,9 @@ export const CreateDao = ({account, setModal}) => {
             </Typography></FormElement>
         </FormRow>
         <FormRow>
-          <FormElement label="DAO Name">
+          <FormElement
+            errorMessage={formErrors?.name}
+            label="DAO Name">
             <SimpleInput
               value={formData?.name || ""}
               onChange={(e) => updateFormData('name', e.target.value)}
@@ -128,7 +200,9 @@ export const CreateDao = ({account, setModal}) => {
           </FormElement>
         </FormRow>
         <FormRow>
-          <FormElement label="A short description of the purpose">
+          <FormElement
+            errorMessage={formErrors?.description}
+            label="A short description of the purpose">
             <TextFieldInput
               value={formData?.description || ""}
               onChange={(e) => updateFormData('description', e.target.value)}
@@ -181,7 +255,8 @@ export const CreateDao = ({account, setModal}) => {
                 secondary
               />
               <Button
-                onClick={onSubmit}
+                disabled={formData.members.filter(m => !!m.value).length === 0 || !formData.name || !formData.description || formErrors?.name || formErrors?.description}
+                onClick={onCreate}
                 iconBefore
                 label="Create DAO"
                 className="ml-2"

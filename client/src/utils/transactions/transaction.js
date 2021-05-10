@@ -8,6 +8,7 @@ export const createTransaction = async ({
                                           account,
                                           assets,
                                           client,
+                                          getFee,
                                         }) => {
   const {publicKey} = account;
   const transactionObject = {
@@ -24,7 +25,9 @@ export const createTransaction = async ({
     .find(s => s.moduleID === moduleId && s.assetID === assetId)
   const schema = assetSchema.schema;
   const fee = transactions.computeMinFee(schema, transactionObject)
-
+  if (getFee) {
+    return transactions.convertBeddowsToLSK(fee.toString())
+  }
   let signedTransaction, tx;
   if (moduleId !== 6666) {
     tx = await client.transaction.create({
