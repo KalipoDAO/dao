@@ -9,7 +9,7 @@ export const NavBarContainer = ({onLoginClick, onRegisterClick, onSignOut, user}
   const [navBarArgs, setNavBarArgs] = useState({
     onLoginClick,
     onRegisterClick,
-    logo: <img src={"/logo192.png"} className="h-10"/>,
+    logo: <img src={"/logo-white.png"} className="h-10"/>,
     navigation: [
       {
         name: 'Votings',
