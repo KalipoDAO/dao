@@ -7,6 +7,7 @@ export const PageTop = () => {
   const history = useHistory();
   const location = useLocation();
   const [crumbs, setCrumbs] = useState([]);
+  const [filtersHidden, setFiltersHidden] = useState(false);
   const matches = {
     votings: useRouteMatch("/votings/:args"),
     members: useRouteMatch("/members/:args"),
@@ -26,6 +27,7 @@ export const PageTop = () => {
 
     switch (pathname) {
       case "/members":
+        setFiltersHidden(true);
         setCrumbs([
           {
             name: "Home",
@@ -38,6 +40,7 @@ export const PageTop = () => {
         ])
         break;
       case "/members/:args":
+        setFiltersHidden(true);
         setCrumbs([
           {
             name: "Home",
@@ -54,6 +57,8 @@ export const PageTop = () => {
         ])
         break;
       case "/votings":
+        setFiltersHidden(false);
+        console.log(123)
         setCrumbs([
           {
             name: "Home",
@@ -66,6 +71,7 @@ export const PageTop = () => {
         ])
         break;
       case "/votings/:args":
+        setFiltersHidden(false);
         setCrumbs([
           {
             name: "Home",
@@ -82,6 +88,7 @@ export const PageTop = () => {
         ])
         break;
       case "/daos":
+        setFiltersHidden(true);
         setCrumbs([
           {
             name: "Home",
@@ -94,6 +101,7 @@ export const PageTop = () => {
         ])
         break;
       case "/daos/:args":
+        setFiltersHidden(true);
         setCrumbs([
           {
             name: "Home",
@@ -109,7 +117,25 @@ export const PageTop = () => {
           },
         ])
         break;
+      case "/create-dao":
+        setFiltersHidden(true);
+        setCrumbs([
+          {
+            name: "Home",
+            onClick: () => history.push("/"),
+          },
+          {
+            name: "DAOs",
+            onClick: () => history.push("/daos"),
+          },
+          {
+            name: "Create DAO",
+            onClick: () => history.push("/create-dao"),
+          },
+        ])
+        break;
       default:
+        setFiltersHidden(false);
         setCrumbs([
           {
             name: "Home",
@@ -126,6 +152,6 @@ export const PageTop = () => {
 
   return (<Container className="flex flex-row my-4 ">
     <BreadCrumbs crumbs={crumbs} className="flex-start w-full"/>
-    <Filters className="flex flex-row justify-end w-full" />
+    <Filters hidden={filtersHidden} className="flex flex-row justify-end w-full" />
   </Container>)
 }

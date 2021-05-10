@@ -1,6 +1,6 @@
 import { BaseModule } from 'lisk-sdk';
 import {AcceptAction, CreateDao, CreateProposal, Vote} from "./transactions";
-import {addMember, getAllDaosAsJSON, getDao} from "./daoAsset";
+import {addDaoToAccount, addMember, getAllDaosAsJSON, getDao} from "./daoAsset";
 import {getAllProposalsAsJSON, getAllProposalsByDaoAsJSON, getProposal} from "./proposalAsset";
 
 export class DaoModule extends BaseModule {
@@ -50,6 +50,7 @@ export class DaoModule extends BaseModule {
   }
 
   reducers = {
+    addDaoToAccount: async (params, stateStore) => addDaoToAccount(stateStore, params),
     addMember: async (params, stateStore) => addMember(stateStore, params),
     // removeMember: async (params, stateStore) => removeMember({params, stateStore}),
     // updateRule: async (params, stateStore) => updateRule({params, stateStore}),

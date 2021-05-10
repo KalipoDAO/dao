@@ -32,7 +32,6 @@ export const useAuth = (closeModal) => {
         client,
       })
       if (result.status) {
-        console.log(result)
         const findTransaction = async () => {
           try {
             await client.transaction.get(Buffer.from(result.message.transactionId, 'hex'))
@@ -40,7 +39,6 @@ export const useAuth = (closeModal) => {
             setRegisterError(false)
             setLoadingSprinkler(false)
           } catch (e) {
-            console.log(e)
             setTimeout(async () => await findTransaction(), 1000)
           }
         }

@@ -8,6 +8,7 @@ export class CreateDao extends BaseAsset {
   schema = createDaoSchema;
 
   apply = async ({asset, stateStore, reducerHandler, transaction}) => {
+
     const senderAccount = await stateStore.account.get(transaction.senderAddress);
     const senderAddress = transaction.senderAddress.toString('hex')
     const foundDao = await findDao(stateStore, asset.name)
@@ -38,11 +39,15 @@ export class CreateDao extends BaseAsset {
         quorum: asset.rules.quorum || 50,
         freeQuorum: asset.rules.freeQuorum || false,
         minQuorum: asset.rules.minQuorum || 50,
-      }
+      },
+      description: asset.description,
     });
 
     senderAccount.dao.owned.push(dao.id);
-    // TODO: update dao.member[] all members from dao creation
+    await Promise.all(asset.members.map(async member => {
+      await stateStore.invoke("dao:addDaoToAccount", {daoId: dao.id, address: member.address})
+    }))
+
     await stateStore.account.set(transaction.senderAddress, senderAccount);
     await addDao(stateStore, dao);
   }

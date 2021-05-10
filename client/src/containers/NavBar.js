@@ -34,11 +34,12 @@ export const NavBarContainer = ({onLoginClick, onRegisterClick, onSignOut, user}
       label="Create new Dao"
       shadow
       iconBefore
+      onClick={() => history.push("/create-dao")}
       icon={<PlusIcon className="h-5 w-5 -ml-2 mr-2"/>}
     />,
     userNavigation: [
-      {name: 'Create a Dao', href: () => alert("Create a dao")},
-      {name: 'Create a voting', href: () => alert("Create a voting")},
+      {name: 'Create a Dao', href: () => history.push("/create-dao")},
+      {name: 'Create a voting', href: () => history.push("/create-dao-proposal")},
       {name: 'Sign out', href: () => onSignOut()},
     ],
     invitations: [

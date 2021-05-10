@@ -13,7 +13,7 @@ export class CreateProposal extends BaseAsset {
     const senderAccount = await stateStore.account.get(transaction.senderAddress);
     const foundDao = await findDaoById(stateStore, asset.dao)
     if (!foundDao) {
-      throw new Error(`DAO couldn't be found with id: ${asset.dao}.`);
+      throw new Error(`DAO couldn't be found with id: ${asset.dao.toString('hex')}.`);
     }
 
     isDaoMember(foundDao, transaction.senderAddress)

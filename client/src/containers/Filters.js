@@ -6,9 +6,13 @@ import {allVotingTypes} from "@moosty/dao-storybook/dist/fixtures/votingTypes";
 import {useDaos} from "../hooks/daos";
 import {useMembers} from "../hooks/members";
 
-export const Filters = () => {
+export const Filters = ({hidden}) => {
   const {daos} = useDaos();
   const {members} = useMembers();
+
+  useEffect(() => {
+    console.log(hidden)
+  },[hidden])
 
   const filters = [
     {
@@ -43,7 +47,7 @@ export const Filters = () => {
     },
   ]
 
-  return (<div>
+  return (<div className={hidden && 'hidden'}>
     <FilterWrapper filters={filters}/>
   </div>)
 }

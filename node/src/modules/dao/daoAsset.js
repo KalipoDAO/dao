@@ -86,6 +86,12 @@ const findDaoById = async (stateStore, daoId) => {
   );
 }
 
+const addDaoToAccount = async (stateStore, {daoId, address}) => {
+  const account = await stateStore.account.get(address);
+  account.dao.members.push(daoId)
+  await stateStore.account.set(address, account);
+}
+
 const addMember = async (stateStore, {daoId, address, nonce, isDao}) => {
   const foundDao = await findDaoById(stateStore, daoId)
   if (!foundDao) {
@@ -154,7 +160,8 @@ const addDao = async (stateStore, dao) => {
       members: [...dao.members],
       rules: {
         ...dao.rules,
-      }
+      },
+      description: dao.description,
     })
   )
 }
@@ -171,4 +178,5 @@ export {
   getDao,
   getAllDaos,
   addMember,
+  addDaoToAccount,
 }

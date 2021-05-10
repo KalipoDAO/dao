@@ -5,7 +5,7 @@
   "dependencies": {
     "@craco/craco": "^6.1.2",
     "@liskhq/lisk-client": "^5.0.4",
-    "@moosty/dao-storybook": "https://github-registry-files.githubusercontent.com/358167819/3aa87c80-adad-11eb-9ec7-1e4260c67ee9?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210505%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210505T142200Z&X-Amz-Expires=300&X-Amz-Signature=fd1b476f7f7ea0080b17b399927487b446f0ede0cff36f4edf64c8b1f8ba5bda&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=358167819&response-content-disposition=filename%3Ddao-storybook-0.1.14-npm.tgz&response-content-type=application%2Foctet-stream",
+    "@moosty/dao-storybook": "https://github-registry-files.githubusercontent.com/358167819/0c3ed180-b039-11eb-85f1-2663d81aaec3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210508%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210508T200751Z&X-Amz-Expires=300&X-Amz-Signature=200891b11d84ae8aac23ff1ff3e3545add4fbd0b5944e4c290ed25da76de13de&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=358167819&response-content-disposition=filename%3Ddao-storybook-0.1.19-npm.tgz&response-content-type=application%2Foctet-stream",
     "@tailwindcss/forms": "^0.3.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",

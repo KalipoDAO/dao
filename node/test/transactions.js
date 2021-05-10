@@ -32,7 +32,8 @@ const run = async () => {
     .setAssets({
       name: "first",
       members: [],
-      rules: {}
+      rules: {},
+      description: "The first and best dao",
     })
     // .validateSchema()
     .send('test')
@@ -42,7 +43,8 @@ const run = async () => {
     .setAssets({
       name: "second",
       members: [],
-      rules: {}
+      rules: {},
+      description: "Just a DAO",
     })
     // .validateSchema()
     .send('test1')

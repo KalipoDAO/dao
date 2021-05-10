@@ -1,7 +1,7 @@
 export const daoAssetSchema = {
   $id: "lisk/dao",
   type: "object",
-  required: ["id", "name", "nonce", "members",],
+  required: ["id", "name", "nonce", "members", "description"],
   properties: {
     id: {
       dataType: "bytes",
@@ -11,7 +11,7 @@ export const daoAssetSchema = {
       dataType: "string",
       fieldNumber: 2,
       minLength: 3,
-      maxLength: 20,
+      maxLength: 50,
     },
     nonce: {
       dataType: "uint64",
@@ -72,6 +72,12 @@ export const daoAssetSchema = {
           default: 50,
         },
       }
+    },
+    description: {
+      dataType: "string",
+      fieldNumber: 6,
+      minLength: 0,
+      maxLength: 140,
     },
   }
 }
@@ -367,7 +373,7 @@ export const daoProposalsStoreSchema = {
 export const createDaoSchema = {
   $id: "lisk/dao/create",
   type: "object",
-  required: ["name", "members", "rules"],
+  required: ["name", "members", "rules", "description"],
   properties: {
     name: {
       dataType: "string",
@@ -415,7 +421,13 @@ export const createDaoSchema = {
           default: 50,
         },
       }
-    }
+    },
+    description: {
+      dataType: "string",
+      fieldNumber: 4,
+      minLength: 3,
+      maxLength: 140,
+    },
   }
 }
 

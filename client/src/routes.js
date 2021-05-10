@@ -5,6 +5,8 @@ import {NavBarContainer} from "./containers/NavBar";
 import {PageTop} from "./containers/PageTop";
 import {ModalContainer} from "./containers/Modal";
 import {useAuth} from "./hooks/auth";
+import {Footer} from "@moosty/dao-storybook";
+import {FooterAuthorDAO, FooterItemsDAO} from "@moosty/dao-storybook/dist/fixtures/footerItemsDAO";
 
 export const Routes = () => {
   const [currentOpen, setCurrentOpen] = useState();
@@ -22,9 +24,12 @@ export const Routes = () => {
         onLoginClick={() => setCurrentOpen("login")}
         onRegisterClick={() => setCurrentOpen("register")}
       />
-      <div className="w-full md:w-app mx-auto">
+      <div className="w-full md:w-app mx-auto min-h-screen">
         <PageTop/>
         <Switch>
+          <Route path={"/create-dao"}>
+            <Views.CreateDao account={account} setModal={setCurrentOpen}/>
+          </Route>
           <Route path={"/daos"}>
             <Views.Home account={account}/>
           </Route>
@@ -42,6 +47,10 @@ export const Routes = () => {
           </Route>
         </Switch>
       </div>
+      <Footer
+        author={FooterAuthorDAO}
+        items={FooterItemsDAO}
+      />
       <ModalContainer
         currentOpen={currentOpen}
         setCurrentOpen={setCurrentOpen}
