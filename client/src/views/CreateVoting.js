@@ -52,7 +52,7 @@ export const CreateVoting = ({account, setModal}) => {
   const history = useHistory();
   const {height,} = useBlocks();
   const {members, setFilter} = useMembers();
-  const {daos, userDaos, setAccount} = useDaos();
+  const {daos, userDaos, setAccount, getDao} = useDaos();
   const [formData, setFormData] = useState({
     member: {id: 0, name: "Select an new member"}
   });
@@ -109,7 +109,8 @@ export const CreateVoting = ({account, setModal}) => {
 
   const onCreate = async () => {
     const client = await getClient;
-    const proposalNonce = BigInt(0)
+    const dao = getDao(formData?.dao?.id)
+    const proposalNonce = BigInt(dao.nonce) + BigInt(1)
     const actions = [];
     if (votingType.id === "ADD_MEMBER") {
       actions.push({
@@ -168,7 +169,8 @@ export const CreateVoting = ({account, setModal}) => {
       state: transactionStates.pending,
     })
     const client = await getClient;
-    const proposalNonce = BigInt(0)
+    const dao = getDao(formData?.dao?.id)
+    const proposalNonce = BigInt(dao.nonce) + BigInt(1)
     const actions = [];
     if (votingType.id === "ADD_MEMBER") {
       actions.push({

@@ -1,8 +1,10 @@
 import React, {useContext, useEffect, useState} from "react";
 import {AppContext} from "../appContext";
+import {useBlocks} from "./blocks";
 
 export const useDaos = () => {
   const [daos, setDaos] = useState([]);
+  const {height} = useBlocks();
   const [account, setAccount] = useState();
   const [userDaos, setUserDaos] = useState([]);
   const {getClient} = useContext(AppContext);
@@ -20,7 +22,7 @@ export const useDaos = () => {
       }
     }
     getDaos()
-  }, [account])
+  }, [account, height])
 
   const getDao = (id) => {
     if (daos) {

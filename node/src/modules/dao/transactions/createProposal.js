@@ -44,6 +44,15 @@ export class CreateProposal extends BaseAsset {
         if (!isAllowedAction(action)) {
           throw new Error(`Action module: ${action.module}, reducers: ${action.reducers} is not allowed.`);
         }
+        if (action.module === "dao" && action.reducers === "addMember") {
+          const nonce = action.params.find(p => p.k === "nonce");
+          if (!nonce) {
+            throw new Error(`Nonce for new member is required`)
+          }
+          if (BigInt(nonce.v) <= foundDao.nonce) {
+            throw new Error(`Your not allowed to add a user now and act it was the passed`)
+          }
+        }
       })
     }
 

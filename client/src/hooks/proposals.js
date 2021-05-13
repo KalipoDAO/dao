@@ -69,8 +69,8 @@ export const useProposals = () => {
     if (addMemberActions.length === 0) {
       return false;
     }
-    const dao = getDao(proposal.dao);
-    if (dao.members.find(m => m.id === account.address)) {
+    const dao = getDao(proposal?.dao);
+    if (dao?.members?.find(m => m.id === account.address)) {
       return false;
     }
     const voteResult = voteDecision(proposal)
@@ -92,7 +92,7 @@ export const useProposals = () => {
       }
     }
     getProposals()
-  }, [account])
+  }, [account, height])
 
   return {
     proposals,
