@@ -1,11 +1,20 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {PlusIcon} from "@heroicons/react/solid";
 import {Button, NavBar} from "@moosty/dao-storybook";
 import {useHistory, useLocation} from "react-router-dom";
+import {useDaos} from "../hooks/daos";
+import {useProposals} from "../hooks/proposals";
+import {createTransaction} from "../utils/transactions";
+import {Buffer} from "@liskhq/lisk-client";
+import {transactionStates} from "@moosty/dao-storybook/dist/stories/modals/templates/resultTransaction";
+import {AppContext} from "../appContext";
 
-export const NavBarContainer = ({onLoginClick, onRegisterClick, onSignOut, user}) => {
+export const NavBarContainer = ({onLoginClick, onRegisterClick, onSignOut, user, setModal}) => {
   const history = useHistory();
   const location = useLocation();
+  const {getClient} = useContext(AppContext);
+  const {daos, getDao} = useDaos();
+  const {invitations, setAccount} = useProposals();
   const [navBarArgs, setNavBarArgs] = useState({
     onLoginClick,
     onRegisterClick,
@@ -42,13 +51,96 @@ export const NavBarContainer = ({onLoginClick, onRegisterClick, onSignOut, user}
       {name: 'Create a voting', href: () => history.push("/create-dao-proposal")},
       {name: 'Sign out', href: () => onSignOut()},
     ],
-    invitations: [
-      {
-        dao: "LiskCenterUtrecht",
-        id: "aksldjflksjdflkjdsf",
-      }
-    ],
+    invitations: [],
   })
+
+  const onAcceptInvite = async (proposal) => {
+    const client = await getClient;
+    const fee = await createTransaction({
+      moduleId: 3500,
+      assetId: 3,
+      assets: {
+        dao: Buffer.from(proposal.dao, 'hex'),
+        proposal: Buffer.from(proposal.id, 'hex'),
+      },
+      account: user,
+      client,
+      getFee: true,
+    })
+    setModal({
+      type: "transactionConfirm",
+      address: user.address,
+      name: user.username,
+      transactionType: "dao:acceptAction",
+      fee: `${fee} LSK`,
+      ctaButton: {
+        label: "Confirm",
+        onClick: () => onSubmit(proposal)
+      }
+    })
+  }
+
+  const onSubmit = async (proposal) => {
+    setModal({
+      type: "transactionResult",
+      text: `Submitting transaction, this can take a few seconds.`,
+      state: transactionStates.pending,
+      cancelLabel: "Close",
+    })
+    const client = await getClient;
+    const result = await createTransaction({
+      moduleId: 3500,
+      assetId: 3,
+      assets: {
+        dao: Buffer.from(proposal.dao, 'hex'),
+        proposal: Buffer.from(proposal.id, 'hex'),
+      },
+      account: user,
+      client,
+    })
+    if (result.status) {
+      const findTransaction = async () => {
+        try {
+          await client.transaction.get(Buffer.from(result.message.transactionId, 'hex'))
+          setModal({
+            type: "transactionResult",
+            text: `Your transaction was successfully`,
+            state: transactionStates.confirmed,
+            cancelLabel: "Close"
+          })
+          history.push('/')
+        } catch (e) {
+          setTimeout(async () => await findTransaction(), 1000)
+        }
+      }
+      await findTransaction()
+
+    } else {
+      setModal({
+        type: "transactionResult",
+        text: result.message,
+        state: transactionStates.error,
+        cancelLabel: "Close"
+      })
+    }
+  }
+
+  useEffect(() => {
+    setAccount(user)
+  }, [user])
+
+  useEffect(() => {
+    if (invitations) {
+      setNavBarArgs({
+        ...navBarArgs,
+        invitations: invitations.map(proposal => ({
+          dao: getDao(proposal.dao)?.name,
+          id: proposal.dao,
+          onClick: () => onAcceptInvite(proposal)
+        }))
+      })
+    }
+  }, [invitations])
 
   useEffect(() => {
     const newNavArgs = {...navBarArgs}
@@ -63,6 +155,7 @@ export const NavBarContainer = ({onLoginClick, onRegisterClick, onSignOut, user}
 
   useEffect(() => {
     if (user) {
+      console.log(user, daos)
       setNavBarArgs({
         ...navBarArgs,
         user: {
@@ -74,7 +167,7 @@ export const NavBarContainer = ({onLoginClick, onRegisterClick, onSignOut, user}
       delete newNavBarArgs.user;
       setNavBarArgs({...newNavBarArgs})
     }
-  }, [user])
+  }, [user, daos])
 
   return (<NavBar
     {...navBarArgs}

@@ -9,7 +9,7 @@ import {
   Typography
 } from '@moosty/dao-storybook';
 
-export const ModalContainer = ({currentOpen, setCurrentOpen, externalError, ctaLoading, onLogin, onRegister}) => {
+export const ModalContainer = ({currentOpen, setCurrentOpen, externalError, ctaLoading, onLogin, onRegister, cancelLabel}) => {
 
   const [registerAccounts, setRegisterAccounts] = useState();
   const [passphraseInput, setPassphrase] = useState();
@@ -71,6 +71,7 @@ export const ModalContainer = ({currentOpen, setCurrentOpen, externalError, ctaL
   })
 
   return <Modal
+    cancelLabel={cancelLabel}
     ctaButton={(currentOpen === 'login' || currentOpen === 'register' || currentOpen?.type === "transactionConfirm") && {
       disabled: disabledCTA || ctaLoading,
       label: [

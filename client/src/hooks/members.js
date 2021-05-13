@@ -3,6 +3,7 @@ import {AppContext} from "../appContext";
 
 export const useMembers = () => {
   const [members, setMembers] = useState([]);
+  const [filter, setFilter] = useState({});
   const {getClient} = useContext(AppContext);
 
   useEffect(() => {
@@ -10,7 +11,8 @@ export const useMembers = () => {
       const client = await getClient;
       const membersList = await client.invoke("sprinkler:getAllUsernames");
       if (membersList?.length > 0) {
-        setMembers(membersList.map(m => ({
+        console.log(filter)
+        setMembers(membersList.filter(typeof filter.memberFilter === "function" ? filter.memberFilter : () => true).map(m => ({
           id: m.ownerAddress,
           icon: `https://avatar.moosty.com/${m.ownerAddress}`,
           address: m.ownerAddress,
@@ -19,9 +21,10 @@ export const useMembers = () => {
       }
     }
     getMembers()
-  }, [])
+  }, [filter])
 
   return {
     members,
+    setFilter,
   }
 }

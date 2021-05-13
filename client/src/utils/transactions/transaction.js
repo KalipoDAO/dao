@@ -24,6 +24,7 @@ export const createTransaction = async ({
   const assetSchema = client.schemas.transactionsAssets
     .find(s => s.moduleID === moduleId && s.assetID === assetId)
   const schema = assetSchema.schema;
+  console.log(schema, transactionObject)
   const fee = transactions.computeMinFee(schema, transactionObject)
   if (getFee) {
     return transactions.convertBeddowsToLSK(fee.toString())

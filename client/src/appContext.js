@@ -1,8 +1,10 @@
 import React from 'react';
-import { apiClient } from "@liskhq/lisk-client"
+import { apiClient, codec } from "@liskhq/lisk-client"
+
+const server = 'ws://localhost:3501/ws'
 
 let client;
-const getClient = async (server) => {
+const getClient = async () => {
   if (!client) {
     client = await apiClient.createWSClient(server)
   }
@@ -10,8 +12,9 @@ const getClient = async (server) => {
 }
 
 const api = {
-  server: 'ws://localhost:3501/ws',
-  getClient: getClient('ws://localhost:3501/ws')
+  server: server,
+  getClient: getClient(),
+  blockTime: 5,
 }
 
 const AppContext = React.createContext({api});

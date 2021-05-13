@@ -6,16 +6,13 @@ import {allVotingTypes} from "@moosty/dao-storybook/dist/fixtures/votingTypes";
 import {useDaos} from "../hooks/daos";
 import {useMembers} from "../hooks/members";
 
-export const Filters = ({hidden}) => {
+export const Filters = ({hidden, updateFilters}) => {
   const {daos} = useDaos();
   const {members} = useMembers();
 
-  useEffect(() => {
-    console.log(hidden)
-  },[hidden])
-
   const filters = [
     {
+      onChange: (value) => updateFilters("dao", value),
       label: "Select DAO",
       items: [allDaoData[0], ...daos].map(d => ({
         id: d.id,
@@ -27,6 +24,7 @@ export const Filters = ({hidden}) => {
       },
     },
     {
+      onChange: (value) => updateFilters("creator", value),
       label: "Initiated by Anyone",
       items: [{
         ...allMembers[0],
@@ -39,15 +37,16 @@ export const Filters = ({hidden}) => {
       },
     },
     {
+      onChange: (value) => updateFilters("state", value),
       label: "Open and Closed",
       items: allVotingTypes,
       selected: {
-        ...allVotingTypes[0],
+        ...allVotingTypes[1],
       },
     },
   ]
 
   return (<div className={hidden && 'hidden'}>
-    <FilterWrapper filters={filters}/>
+    <FilterWrapper filters={filters} defaultShow={false}/>
   </div>)
 }

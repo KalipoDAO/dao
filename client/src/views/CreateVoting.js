@@ -1,3 +1,4 @@
+/* global BigInt */
 import React, {useContext, useEffect, useState} from "react";
 import {
   Button,
@@ -7,9 +8,9 @@ import {
   FormElement,
   FormRow,
   InputAvatar,
+  SimpleInput,
   TextFieldInput,
   Typography,
-  SimpleInput,
 } from "@moosty/dao-storybook"
 import moment from 'moment';
 import {useMembers} from "../hooks/members";
@@ -20,7 +21,9 @@ import {AppContext} from "../appContext";
 import {useHistory} from "react-router-dom";
 import {allDaoData} from "@moosty/dao-storybook/dist/fixtures/daos";
 import {useDaos} from "../hooks/daos";
+import {useBlocks} from "../hooks/blocks";
 
+const votingTime = 10000;
 const allVotingTypes = [{
   id: "NONE",
   name: 'Select a voting type',
@@ -45,11 +48,14 @@ const allVotingTypes = [{
 ]
 
 export const CreateVoting = ({account, setModal}) => {
+  const {getClient, blockTime} = useContext(AppContext);
   const history = useHistory();
-  const {getClient} = useContext(AppContext);
-  const {members} = useMembers();
-  const {daos} = useDaos();
-  const [formData, setFormData] = useState();
+  const {height,} = useBlocks();
+  const {members, setFilter} = useMembers();
+  const {daos, userDaos, setAccount} = useDaos();
+  const [formData, setFormData] = useState({
+    member: {id: 0, name: "Select an new member"}
+  });
   const [error, setError] = useState(null);
   const [formErrors, setFormErrors] = useState(null);
   const [loadingCreate, setLoadingCreate] = useState(false);
@@ -57,37 +63,85 @@ export const CreateVoting = ({account, setModal}) => {
   const [votingType, setVotingType] = useState(allVotingTypes[1]);
 
   useEffect(() => {
+    if (account) {
+      setAccount(account)
+    }
+  }, [account, setAccount])
+
+  useEffect(() => {
     let errors = {}
     if (formData?.start) {
-      if (moment(formData.start).isBefore(moment())) {
+      if (moment(formData.start).isBefore(moment().subtract(1, 'd'))) {
         errors.start = "Proposal start date should be in the future"
       }
     }
+    if (votingType.id === "ADD_MEMBER") {
+      if (formData?.member?.id === 0) {
+        errors.member = "You have to select an new member"
+      }
+    }
+    if (votingType.id === "BINARY" && formData.description) {
+      if (formData?.description?.length > 140) {
+        errors.description = "Description should be 140 characters or shorter"
+      }
+      if (formData?.description?.length < 3) {
+        errors.description = "Description should be at least 3 characters long"
+      }
+    }
     setFormErrors(errors)
-  }, [formData])
+  }, [formData, votingType])
 
   const updateFormData = (field, value) => {
+    const newFormData = {...formData}
+    if (field === "dao") {
+      const dao = daos.find(d => d.id === value.id)
+      const memberFilter = (member) => {
+        return !dao.members.find(m => m.id === member.ownerAddress)
+      }
+      setFilter({memberFilter})
+      newFormData.member = {id: 0, name: "Select an new member"};
+    }
     setFormData({
-      ...formData,
+      ...newFormData,
       [field]: value,
     })
   }
 
   const onCreate = async () => {
-    const client = await getClient
+    const client = await getClient;
+    const proposalNonce = BigInt(0)
+    const actions = [];
+    if (votingType.id === "ADD_MEMBER") {
+      actions.push({
+        module: "dao",
+        reducers: "addMember",
+        params: [
+          {k: "address", v: formData.member.id, paramType: 'bytes'},
+          {k: "daoId", v: formData.dao.id, paramType: 'bytes'},
+          {k: "nonce", v: proposalNonce.toString(), paramType: 'uint64'},
+          {k: "isDao", v: "false", paramType: 'boolean'},
+        ],
+        acceptor: new Buffer.from(formData.member.id, 'hex'),
+        condition: {
+          option: new Buffer.from('8a798890fe93817163b10b5f7bd2ca4d25d84c52739a645a889c173eee7d9d3d', 'hex'),
+          operator: "win",
+        },
+      })
+    }
+    const start = moment(formData.start).isBefore(moment()) && moment(formData.start).isAfter(moment().subtract(1, 'd')) ?
+      height + 10 : Math.floor((moment(formData?.start).diff(moment()) / 1000) / blockTime) + height;
     const fee = await createTransaction({
       moduleId: 3500,
-      assetId: 0,
+      assetId: 1,
       assets: {
-        name: formData.name,
-        members: [
-          ...formData.members.map(m => m?.value?.address && ({
-            id: new Buffer.from(m.value.address, 'hex'),
-            isDao: false,
-          })).filter(Boolean),
-        ],
+        dao: Buffer.from(formData.dao.id, 'hex'),
+        description: formData.description || `Invite ${formData.member.name} to ${formData.dao.name}`,
+        options: [],
         rules: {},
-        description: formData.description,
+        nonce: proposalNonce,
+        start: start,
+        end: start + votingTime,
+        actions: actions,
       },
       account,
       client,
@@ -97,7 +151,7 @@ export const CreateVoting = ({account, setModal}) => {
       type: "transactionConfirm",
       address: account.address,
       name: account.username,
-      transactionType: "dao:create",
+      transactionType: "dao:createProposal",
       fee: `${fee} LSK`,
       ctaButton: {
         label: "Confirm",
@@ -114,19 +168,39 @@ export const CreateVoting = ({account, setModal}) => {
       state: transactionStates.pending,
     })
     const client = await getClient;
+    const proposalNonce = BigInt(0)
+    const actions = [];
+    if (votingType.id === "ADD_MEMBER") {
+      actions.push({
+        module: "dao",
+        reducers: "addMember",
+        params: [
+          {k: "address", v: formData.member.id, paramType: 'bytes'},
+          {k: "daoId", v: formData.dao.id, paramType: 'bytes'},
+          {k: "nonce", v: proposalNonce.toString(), paramType: 'uint64'},
+          {k: "isDao", v: "false", paramType: 'boolean'},
+        ],
+        acceptor: Buffer.from(formData.member.id, 'hex'),
+        condition: {
+          option: Buffer.from('8a798890fe93817163b10b5f7bd2ca4d25d84c52739a645a889c173eee7d9d3d', 'hex'),
+          operator: "win",
+        },
+      })
+    }
+    const start = moment(formData.start).isBefore(moment()) && moment(formData.start).isAfter(moment().subtract(1, 'd')) ?
+      height + 10 : Math.floor((moment(formData?.start).diff(moment()) / 1000) / blockTime) + height;
     const result = await createTransaction({
       moduleId: 3500,
-      assetId: 0,
+      assetId: 1,
       assets: {
-        name: formData.name,
-        members: [
-          ...formData.members.map(m => m?.value?.address && ({
-            id: new Buffer.from(m.value.address, 'hex'),
-            isDao: false,
-          })).filter(Boolean),
-        ],
+        dao: Buffer.from(formData.dao.id, 'hex'),
+        description: formData.description || `Invite ${formData.member.name} to ${formData.dao.name}`,
+        options: [],
         rules: {},
-        description: formData.description,
+        nonce: proposalNonce,
+        start: start,
+        end: start + votingTime,
+        actions: [...actions],
       },
       account,
       client,
@@ -140,7 +214,7 @@ export const CreateVoting = ({account, setModal}) => {
           setSuccess(true)
           setModal({
             type: "transactionResult",
-            text: `Your DAO is created successfully`,
+            text: `Your proposal is created successfully`,
             state: transactionStates.confirmed
           })
           history.push('/')
@@ -172,7 +246,7 @@ export const CreateVoting = ({account, setModal}) => {
       </Typography>
     </div>
     {/*Form*/}
-    <Form className="lg:grid lg:grid-cols-2  lg:divide-x-2 lg:divide-formDivider lg:h-screen">
+    <Form className="lg:grid lg:grid-cols-2  lg:divide-x-2 lg:divide-formDivider">
       {/*COLUMN LEFT */}
       <FormColumn className="lg:mx-4 lg:mr-10">
         <FormRow>
@@ -180,7 +254,7 @@ export const CreateVoting = ({account, setModal}) => {
             label="Select a DAO">
             <InputAvatar
               value={formData?.dao || ""}
-              items={[allDaoData[0], ...daos.map(d => ({
+              items={[allDaoData[0], ...userDaos.map(d => ({
                 id: d.id,
                 name: d.name,
                 icon: `https://avatar.moosty.com/${d.id}`,
@@ -199,11 +273,20 @@ export const CreateVoting = ({account, setModal}) => {
               onChange={setVotingType}
               label={"Select Voting type"}
               items={allVotingTypes}
-                         selectedItem={votingType}/>
+              selectedItem={votingType}
+            />
           </FormElement>
         </FormRow>
-        {votingType.id !== "ADD_MEMBER" && <FormRow>
-          <FormElement label="Description">
+        {votingType.id !== "ADD_MEMBER" && votingType.id !== "BINARY" && <FormRow>
+          <FormElement label="This voting type is not yet available">
+            Please select a different type of voting.
+          </FormElement>
+        </FormRow>}
+        {votingType.id === "BINARY" && <FormRow>
+          <FormElement
+            label="Description"
+            errorMessage={formErrors?.description}
+          >
             <TextFieldInput
               onChange={({target: {value}}) => updateFormData('description', value)}
               placeholder="What are you proposing?"/>
@@ -219,6 +302,11 @@ export const CreateVoting = ({account, setModal}) => {
               label="Start Date"
               errorMessage={formErrors?.start}
               error={formErrors?.start}
+              descriptionBottom={formData?.start && moment(formData.start).isBefore(moment()) && moment(formData.start).isAfter(moment().subtract(1, 'd')) ?
+                `Start at block height ${height + 10}, current block height is ${height}` :
+                formData?.start && moment(formData.start).isAfter(moment()) ?
+                  `Start at block height ${Math.floor((moment(formData?.start).diff(moment()) / 1000) / blockTime) + height}, current block height is ${height}` : ""
+              }
             >
               <SimpleInput
                 error={formErrors?.start}
@@ -230,16 +318,37 @@ export const CreateVoting = ({account, setModal}) => {
               />
             </FormElement>
           </FormRow>
+          {votingType.id === "ADD_MEMBER" && <FormRow>
+            <FormElement
+              label={"Who would you propose as new member"}
+              errorMessage={formErrors?.member}
+            >
+              <InputAvatar
+                items={members}
+                onChange={(value) => updateFormData('member', value)}
+                selectedItem={formData?.member}
+              />
+            </FormElement>
+          </FormRow>}
           <div className="pt-5">
             <div className="flex justify-end">
               <Button
                 shadow
-                onClick={() => setFormData({})}
+                onClick={() => {
+                  setVotingType(allVotingTypes[0])
+                  setFormData({})
+                }}
                 label="Cancel"
                 secondary
               />
               <Button
-                disabled={formErrors?.description}
+                disabled={
+                  (votingType.id !== "ADD_MEMBER" && votingType.id !== "BINARY") ||
+                  formErrors?.member ||
+                  formErrors?.description ||
+                  !formData?.start ||
+                  votingType.id === "NONE"
+                }
                 onClick={onCreate}
                 iconBefore
                 label="Create Proposal"

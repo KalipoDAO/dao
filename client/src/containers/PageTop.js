@@ -3,7 +3,7 @@ import {Container, BreadCrumbs} from "@moosty/dao-storybook";
 import {Filters} from "./Filters";
 import {useHistory, useLocation, useRouteMatch} from "react-router-dom";
 
-export const PageTop = () => {
+export const PageTop = ({updateFilters}) => {
   const history = useHistory();
   const location = useLocation();
   const [crumbs, setCrumbs] = useState([]);
@@ -134,6 +134,23 @@ export const PageTop = () => {
           },
         ])
         break;
+      case "/create-dao-proposal":
+        setFiltersHidden(true);
+        setCrumbs([
+          {
+            name: "Home",
+            onClick: () => history.push("/"),
+          },
+          {
+            name: "Proposals",
+            onClick: () => history.push("/votings"),
+          },
+          {
+            name: "Create Proposal",
+            onClick: () => history.push("/create-dao-proposal"),
+          },
+        ])
+        break;
       default:
         setFiltersHidden(false);
         setCrumbs([
@@ -152,6 +169,6 @@ export const PageTop = () => {
 
   return (<Container className="flex flex-row my-4 ">
     <BreadCrumbs crumbs={crumbs} className="flex-start w-full"/>
-    <Filters hidden={filtersHidden} className="flex flex-row justify-end w-full" />
+    <Filters updateFilters={updateFilters} hidden={filtersHidden} className="flex flex-row justify-end w-full" />
   </Container>)
 }

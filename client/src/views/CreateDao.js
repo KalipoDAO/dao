@@ -177,7 +177,7 @@ export const CreateDao = ({account, setModal}) => {
       </Typography>
     </div>
     {/*Form*/}
-    <Form className="lg:grid lg:grid-cols-2  lg:divide-x-2 lg:divide-formDivider lg:h-screen">
+    <Form className="lg:grid lg:grid-cols-2 lg:divide-x-2 lg:divide-formDivider">
       {/*COLUMN LEFT */}
       <FormColumn className="lg:mx-4 lg:mr-10">
         <FormRow>

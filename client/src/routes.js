@@ -10,22 +10,32 @@ import {FooterAuthorDAO, FooterItemsDAO} from "@moosty/dao-storybook/dist/fixtur
 
 export const Routes = () => {
   const [currentOpen, setCurrentOpen] = useState();
+  const [filters, setFilters] = useState();
   const {account, onLogin, onRegister, registerError, loadingSprinkler, onSignOut} = useAuth(setCurrentOpen);
 
   useEffect(() => {
     console.log(account)
   }, [account])
 
+  const updateFilters = (filter, value) => {
+    setFilters({
+      ...filters,
+      [filter]: value,
+    })
+  }
+
   return (
     <Router>
       <NavBarContainer
+        setModal={setCurrentOpen}
         onSignOut={() => onSignOut()}
         user={account}
         onLoginClick={() => setCurrentOpen("login")}
         onRegisterClick={() => setCurrentOpen("register")}
       />
-      <div className="w-full md:w-app mx-auto min-h-screen">
-        <PageTop/>
+      <div className="w-full  min-h-screen  flex flex-col">
+        <div className={"w-full mx-auto md:w-app flex-grow mb-10"}>
+        <PageTop updateFilters={updateFilters} />
         <Switch>
           <Route path={"/create-dao"}>
             <Views.CreateDao account={account} setModal={setCurrentOpen}/>
@@ -34,26 +44,28 @@ export const Routes = () => {
             <Views.CreateVoting account={account} setModal={setCurrentOpen}/>
           </Route>
           <Route path={"/daos"}>
-            <Views.Home account={account}/>
+            <Views.Daos account={account}/>
           </Route>
           <Route path={"/members"}>
-            <Views.Home account={account}/>
+            <Views.Members account={account} setModal={setCurrentOpen}/>
           </Route>
           <Route path={"/votings/:args"}>
-            <Views.Home account={account}/>
+            <Views.Home filters={filters} account={account} setModal={setCurrentOpen}/>
           </Route>
           <Route path={"/votings"}>
-            <Views.Home account={account}/>
+            <Views.Home filters={filters} account={account} setModal={setCurrentOpen}/>
           </Route>
           <Route path={"/"}>
-            <Views.Home account={account}/>
+            <Views.Home filters={filters} account={account} setModal={setCurrentOpen}/>
           </Route>
         </Switch>
+        </div>
+          <Footer
+            author={FooterAuthorDAO}
+            items={FooterItemsDAO}
+          />
       </div>
-      <Footer
-        author={FooterAuthorDAO}
-        items={FooterItemsDAO}
-      />
+
       <ModalContainer
         currentOpen={currentOpen}
         setCurrentOpen={setCurrentOpen}
