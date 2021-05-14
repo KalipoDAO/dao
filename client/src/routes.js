@@ -10,14 +10,15 @@ import {FooterAuthorDAO, FooterItemsDAO} from "@moosty/dao-storybook/dist/fixtur
 
 export const Routes = () => {
   const [currentOpen, setCurrentOpen] = useState();
-  const [filters, setFilters] = useState();
+  const [filtersFilter, setFilters] = useState();
   const {account, onLogin, onRegister, registerError, loadingSprinkler, onSignOut} = useAuth(setCurrentOpen);
 
   useEffect(() => {
-    console.log(account)
-  }, [account])
+    console.log(filtersFilter)
+  }, [filtersFilter])
 
-  const updateFilters = (filter, value) => {
+  const updateFilters = (filter, value, filters) => {
+    console.log(filter, filters, value)
     setFilters({
       ...filters,
       [filter]: value,
@@ -35,7 +36,7 @@ export const Routes = () => {
       />
       <div className="w-full  min-h-screen  flex flex-col">
         <div className={"w-full mx-auto md:w-app flex-grow mb-10"}>
-        <PageTop updateFilters={updateFilters} />
+        <PageTop updateFilters={updateFilters} filters={filtersFilter} />
         <Switch>
           <Route path={"/create-dao"}>
             <Views.CreateDao account={account} setModal={setCurrentOpen}/>
@@ -50,13 +51,13 @@ export const Routes = () => {
             <Views.Members account={account} setModal={setCurrentOpen}/>
           </Route>
           <Route path={"/votings/:args"}>
-            <Views.Home filters={filters} account={account} setModal={setCurrentOpen}/>
+            <Views.Home filters={filtersFilter} account={account} setModal={setCurrentOpen}/>
           </Route>
           <Route path={"/votings"}>
-            <Views.Home filters={filters} account={account} setModal={setCurrentOpen}/>
+            <Views.Home filters={filtersFilter} account={account} setModal={setCurrentOpen}/>
           </Route>
           <Route path={"/"}>
-            <Views.Home filters={filters} account={account} setModal={setCurrentOpen}/>
+            <Views.Home filters={filtersFilter} account={account} setModal={setCurrentOpen}/>
           </Route>
         </Switch>
         </div>

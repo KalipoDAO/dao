@@ -6,8 +6,10 @@ import {
   LoginModal,
   Modal,
   ResultTransactionModal,
-  Typography
+  Typography,
+
 } from '@moosty/dao-storybook';
+import { ModalTemplate } from '@moosty/dao-storybook/dist/stories/modals/ModalTemplate'
 
 export const ModalContainer = ({currentOpen, setCurrentOpen, externalError, ctaLoading, onLogin, onRegister, cancelLabel}) => {
 
@@ -71,34 +73,38 @@ export const ModalContainer = ({currentOpen, setCurrentOpen, externalError, ctaL
   })
 
   return <Modal
-    cancelLabel={cancelLabel}
-    ctaButton={(currentOpen === 'login' || currentOpen === 'register' || currentOpen?.type === "transactionConfirm") && {
-      disabled: disabledCTA || ctaLoading,
-      label: [
-        !ctaLoading && currentOpen === 'login' && "Sign in!",
-        !ctaLoading && currentOpen === 'register' && "Sign up!",
-        !ctaLoading && currentOpen?.type === "transactionConfirm" && !currentOpen?.ctaButton?.label && "Confirm",
-        !ctaLoading && currentOpen?.ctaButton?.label,
-        ctaLoading && "Loading...",
-      ].filter(Boolean).join(),
-      onClick: () => {
-        if (currentOpen === 'login') {
-          onLogin(account)
-        }
-        if (currentOpen === 'register') {
-          onRegister({
-            ...account,
-            username,
-          })
-        }
-        if (currentOpen?.type === "transactionConfirm") {
-          currentOpen?.ctaButton?.onClick && currentOpen.ctaButton.onClick()
-        }
-      },
-    }}
-    onClose={() => setCurrentOpen(null)}
     open={!!currentOpen}
+    onClose={() => setCurrentOpen(null)}
+
   >
+    <ModalTemplate
+      cancelLabel={cancelLabel}
+      ctaButton={(currentOpen === 'login' || currentOpen === 'register' || currentOpen?.type === "transactionConfirm") && {
+        disabled: disabledCTA || ctaLoading,
+        label: [
+          !ctaLoading && currentOpen === 'login' && "Sign in!",
+          !ctaLoading && currentOpen === 'register' && "Sign up!",
+          !ctaLoading && currentOpen?.type === "transactionConfirm" && !currentOpen?.ctaButton?.label && "Confirm",
+          !ctaLoading && currentOpen?.ctaButton?.label,
+          ctaLoading && "Loading...",
+        ].filter(Boolean).join(),
+        onClick: () => {
+          if (currentOpen === 'login') {
+            onLogin(account)
+          }
+          if (currentOpen === 'register') {
+            onRegister({
+              ...account,
+              username,
+            })
+          }
+          if (currentOpen?.type === "transactionConfirm") {
+            currentOpen?.ctaButton?.onClick && currentOpen.ctaButton.onClick()
+          }
+        },
+      }}
+      onClose={() => setCurrentOpen(null)}
+    >
     {currentOpen === 'register' && <CreateAccountModal
       accounts={registerAccounts}
       changeAccount={changeAccount}
@@ -126,5 +132,6 @@ export const ModalContainer = ({currentOpen, setCurrentOpen, externalError, ctaL
       state={currentOpen.state}
       text={currentOpen.text}
     />}
+    </ModalTemplate>
   </Modal>
 }

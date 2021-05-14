@@ -261,7 +261,7 @@ export const CreateVoting = ({account, setModal}) => {
                 name: d.name,
                 icon: `https://avatar.moosty.com/${d.id}`,
               }))]}
-              selected={{
+              selectedItem={{
                 ...allDaoData[0],
               }}
               onChange={(value) => updateFormData('dao', value)}
@@ -335,7 +335,6 @@ export const CreateVoting = ({account, setModal}) => {
           <div className="pt-5">
             <div className="flex justify-end">
               <Button
-                shadow
                 onClick={() => {
                   setVotingType(allVotingTypes[0])
                   setFormData({})
@@ -344,6 +343,11 @@ export const CreateVoting = ({account, setModal}) => {
                 secondary
               />
               <Button
+                shadow={!((votingType.id !== "ADD_MEMBER" && votingType.id !== "BINARY") ||
+                formErrors?.member ||
+                formErrors?.description ||
+                !formData?.start ||
+                votingType.id === "NONE")}
                 disabled={
                   (votingType.id !== "ADD_MEMBER" && votingType.id !== "BINARY") ||
                   formErrors?.member ||
@@ -354,10 +358,13 @@ export const CreateVoting = ({account, setModal}) => {
                 onClick={onCreate}
                 iconBefore
                 label="Create Proposal"
-                className="ml-2"
-                shadow
+                className="ml-5"
+
                 icon={<svg
-                  className="mr-2"
+                  className={[
+                    "mr-2",
+
+                  ].join(" ")}
                   width="21"
                   height="22"
                   viewBox="0 0 21 22"

@@ -25,11 +25,6 @@ const defaultFormData = {
       selectedItem: {id: 0, name: "Select a member"},
       placeholder: "Answer option"
     },
-    {
-      id: 2,
-      placeholder: "Answer option",
-      selectedItem: {id: 0, name: "Select a member"},
-    }
   ]
 }
 
@@ -225,15 +220,21 @@ export const CreateDao = ({account, setModal}) => {
             <FormElement label="Select all founding members">
               <MultipleChoice
                 maxItems={10}
-                onChange={(options) => updateFormData('members', options)}
-                minItems={2}
+                onChange={(options) => {
+                  console.log(options)
+                  updateFormData('members', [...options.map(option => ({...option, selectedItem: option.value}))])
+                }}
+                minItems={1}
                 type={"inputAvatar"}
                 newOptionPlaceholder={"Answer option"}
                 typeOptions={{
                   items: members,
                   selectedItem: {id: 0, name: "Select a member"},
                 }}
-                options={formData.members}
+                options={formData?.members.map(m => {
+                  console.log(m.selectedItem)
+                  return m
+                })}
               />
             </FormElement>
           </FormRow>

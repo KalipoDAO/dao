@@ -7,7 +7,10 @@ const fullRotate = () => {
 }
 
 module.exports = {
-  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  purge: [
+    './src/**/*.{js,jsx,ts,tsx}',
+    './node_modules/@moosty/dao-storybook/**/*.{js,jsx,ts,tsx}',
+    './public/index.html'],
   darkMode: false, // or 'media' or 'class'
   theme: {
     fontSize: {
@@ -101,9 +104,6 @@ module.exports = {
         textError: 'var(--color-text-error)',
 
         cardBg: 'var(--color-deep-0)',
-
-
-
 
         surfaceBg: 'var(--color-surface-bg)',
         surfaceIconBg: 'var(--color-surface-icon-bg)',
