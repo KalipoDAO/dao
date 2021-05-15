@@ -165,9 +165,9 @@ export const CreateDao = ({account, setModal}) => {
 
   useEffect(() => console.log(formData), [formData])
 
-  return (<Container>
+  return (<Container className="space-y-3">
     <div className="lg:ml-4 my-4 ">
-      <Typography type="h2" Element='h2'>
+      <Typography className="py-4"  type="h2" Element='h2'>
         Create new DAO
       </Typography>
     </div>

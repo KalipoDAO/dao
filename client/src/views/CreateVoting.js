@@ -243,7 +243,7 @@ export const CreateVoting = ({account, setModal}) => {
 
   return (<Container>
     <div className="lg:ml-4 my-4 ">
-      <Typography type="h2" Element='h2'>
+      <Typography className="py-4" type="h2" Element='h2'>
         Create a Proposal
       </Typography>
     </div>
