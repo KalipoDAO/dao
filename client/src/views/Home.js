@@ -190,7 +190,7 @@ export const Home = ({account, setModal, filters}) => {
 
   return <div>
     <Container>
-      <div className="flex flex-row flex-wrap content-start  space-x-5 space-y-8 mx-auto">
+      <div className="flex flex-row flex-wrap content-start space-x-5 space-y-8 mx-auto">
         {filteredVotings?.map((card, i) => <VotingContainer key={card.id} className={i === 0 && "ml-5 mt-8"} {...card} height={height} />)}
       </div>
     </Container>
