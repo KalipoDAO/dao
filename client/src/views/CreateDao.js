@@ -241,7 +241,7 @@ export const CreateDao = ({account, setModal}) => {
           <div className="pt-5">
             <div className="flex justify-end">
               <Button
-                shadow
+
                 onClick={() => setFormData({
                   ...defaultFormData,
                   members: [
@@ -260,7 +260,7 @@ export const CreateDao = ({account, setModal}) => {
                 iconBefore
                 label="Create DAO"
                 className="ml-2"
-                shadow
+
                 icon={<svg
                   className="mr-2"
                   width="21"
