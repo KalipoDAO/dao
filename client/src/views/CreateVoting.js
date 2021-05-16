@@ -243,14 +243,14 @@ export const CreateVoting = ({account, setModal}) => {
 
   return (<Container>
     <div className="lg:ml-4 my-4 ">
-      <Typography type="h2" Element='h2'>
+      <Typography className="py-4" type="h2" Element='h2'>
         Create a Proposal
       </Typography>
     </div>
     {/*Form*/}
     <Form className="lg:grid lg:grid-cols-2  lg:divide-x-2 lg:divide-formDivider">
       {/*COLUMN LEFT */}
-      <FormColumn className="lg:mx-4 lg:mr-10">
+      <FormColumn className="lg:mx-4 lg:mr-10 space-y-3">
         <FormRow>
           <FormElement
             label="Select a DAO">
@@ -297,8 +297,8 @@ export const CreateVoting = ({account, setModal}) => {
       </FormColumn>
 
       {/*COLUMN RIGHT*/}
-      <FormColumn className="">
-        <div className="lg:ml-10 ">
+      <FormColumn className=" ">
+        <div className="lg:ml-10 space-y-3 ">
           <FormRow className="flex-col">
             <FormElement
               label="Start Date"
@@ -333,7 +333,7 @@ export const CreateVoting = ({account, setModal}) => {
             </FormElement>
           </FormRow>}
           <div className="pt-5">
-            <div className="flex justify-end">
+            <div className="flex justify-end space-x-4">
               <Button
                 onClick={() => {
                   setVotingType(allVotingTypes[0])
@@ -358,7 +358,7 @@ export const CreateVoting = ({account, setModal}) => {
                 onClick={onCreate}
                 iconBefore
                 label="Create Proposal"
-                className="ml-5"
+                className=""
 
                 icon={<svg
                   className={[

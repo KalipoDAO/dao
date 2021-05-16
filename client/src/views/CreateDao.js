@@ -165,16 +165,16 @@ export const CreateDao = ({account, setModal}) => {
 
   useEffect(() => console.log(formData), [formData])
 
-  return (<Container>
+  return (<Container className="space-y-3">
     <div className="lg:ml-4 my-4 ">
-      <Typography type="h2" Element='h2'>
+      <Typography className="py-4"  type="h2" Element='h2'>
         Create new DAO
       </Typography>
     </div>
     {/*Form*/}
     <Form className="lg:grid lg:grid-cols-2 lg:divide-x-2 lg:divide-formDivider">
       {/*COLUMN LEFT */}
-      <FormColumn className="lg:mx-4 lg:mr-10">
+      <FormColumn className="lg:mx-4 lg:mr-10 space-y-3">
         <FormRow>
           <FormElement label="Creating your DAO">
             <Typography type="body">
@@ -207,7 +207,7 @@ export const CreateDao = ({account, setModal}) => {
 
       {/*COLUMN RIGHT*/}
       <FormColumn className="">
-        <div className="lg:ml-10 ">
+        <div className="lg:ml-10 space-y-3 ">
           <FormRow>
             <FormElement label="Creating your DAO">
               <Typography type="body">
@@ -239,9 +239,9 @@ export const CreateDao = ({account, setModal}) => {
             </FormElement>
           </FormRow>
           <div className="pt-5">
-            <div className="flex justify-end">
+            <div className="flex justify-end space-x-4">
               <Button
-                shadow
+
                 onClick={() => setFormData({
                   ...defaultFormData,
                   members: [
@@ -259,8 +259,8 @@ export const CreateDao = ({account, setModal}) => {
                 onClick={onCreate}
                 iconBefore
                 label="Create DAO"
-                className="ml-2"
-                shadow
+                className=""
+
                 icon={<svg
                   className="mr-2"
                   width="21"
