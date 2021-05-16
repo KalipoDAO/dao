@@ -58,7 +58,6 @@ export const PageTop = ({updateFilters, filters}) => {
         break;
       case "/votings":
         setFiltersHidden(false);
-        console.log(123)
         setCrumbs([
           {
             name: "Home",
@@ -152,17 +151,8 @@ export const PageTop = ({updateFilters, filters}) => {
         ])
         break;
       default:
-        setFiltersHidden(false);
-        setCrumbs([
-          {
-            name: "Home",
-            onClick: () => history.push("/"),
-          },
-          {
-            name: "Votings",
-            onClick: () => history.push("/votings"),
-          }
-        ])
+        setFiltersHidden(true);
+        setCrumbs([])
         break;
     }
   }, [location]);

@@ -22,8 +22,8 @@ export const NavBarContainer = ({onLoginClick, onRegisterClick, onSignOut, user,
     navigation: [
       {
         name: 'Votings',
-        href: () => history.push('/'),
-        path: '/',
+        href: () => history.push('/votings'),
+        path: '/votings',
         current: false,
       },
       {
@@ -155,7 +155,6 @@ export const NavBarContainer = ({onLoginClick, onRegisterClick, onSignOut, user,
 
   useEffect(() => {
     if (user) {
-      console.log(user, daos)
       setNavBarArgs({
         ...navBarArgs,
         user: {

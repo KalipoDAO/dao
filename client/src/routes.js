@@ -6,7 +6,7 @@ import {PageTop} from "./containers/PageTop";
 import {ModalContainer} from "./containers/Modal";
 import {useAuth} from "./hooks/auth";
 import {Footer} from "@moosty/dao-storybook";
-import {FooterAuthorDAO, FooterItemsDAO} from "@moosty/dao-storybook/dist/fixtures/footerItemsDAO";
+import {FooterAuthorDAO, FooterItemsDAO} from "@moosty/dao-storybook/dist/fixtures/dao/footerItemsDAO";
 
 export const Routes = () => {
   const [currentOpen, setCurrentOpen] = useState();
@@ -57,7 +57,7 @@ export const Routes = () => {
             <Views.Home filters={filtersFilter} account={account} setModal={setCurrentOpen}/>
           </Route>
           <Route path={"/"}>
-            <Views.Home filters={filtersFilter} account={account} setModal={setCurrentOpen}/>
+            <Views.LandingPage />
           </Route>
         </Switch>
         </div>
