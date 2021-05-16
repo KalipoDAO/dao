@@ -219,7 +219,7 @@ export const CreateVoting = ({account, setModal}) => {
             text: `Your proposal is created successfully`,
             state: transactionStates.confirmed
           })
-          history.push('/')
+          history.push('/votings')
         } catch (e) {
           setTimeout(async () => await findTransaction(), 1000)
         }
@@ -261,9 +261,7 @@ export const CreateVoting = ({account, setModal}) => {
                 name: d.name,
                 icon: `https://avatar.moosty.com/${d.id}`,
               }))]}
-              selectedItem={{
-                ...allDaoData[0],
-              }}
+              selectedItem={formData?.dao}
               onChange={(value) => updateFormData('dao', value)}
             />
           </FormElement>

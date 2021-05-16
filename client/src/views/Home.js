@@ -133,7 +133,7 @@ export const Home = ({account, setModal, filters}) => {
             text: `Your vote is casted successfully`,
             state: transactionStates.confirmed
           })
-          history.push('/')
+          history.push('/votings')
         } catch (e) {
           setTimeout(async () => await findTransaction(), 1000)
         }
@@ -162,7 +162,7 @@ export const Home = ({account, setModal, filters}) => {
           eligibleVotes: dao.members.filter(m => m.nonce <= v.nonce).length,
           end: v.end,
           start: v.start,
-          height: height || 99999999999999,
+          height: height || 1,
           minToWin: v.rules.minToWin,
           quorum: v.rules.quorum,
           yes: v.votes.filter(vote =>

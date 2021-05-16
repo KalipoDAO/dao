@@ -143,7 +143,7 @@ export const CreateDao = ({account, setModal}) => {
             text: `Your DAO is created successfully`,
             state: transactionStates.confirmed
           })
-          history.push('/')
+          history.push('/daos')
         } catch (e) {
           setTimeout(async () => await findTransaction(), 1000)
         }
@@ -221,7 +221,6 @@ export const CreateDao = ({account, setModal}) => {
               <MultipleChoice
                 maxItems={10}
                 onChange={(options) => {
-                  console.log(options)
                   updateFormData('members', [...options.map(option => ({...option, selectedItem: option.value}))])
                 }}
                 minItems={1}

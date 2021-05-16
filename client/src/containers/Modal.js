@@ -7,7 +7,7 @@ import {
   Modal,
   ResultTransactionModal,
   Typography,
-
+  MemberModal,
 } from '@moosty/dao-storybook';
 import { ModalTemplate } from '@moosty/dao-storybook/dist/stories/modals/ModalTemplate'
 
@@ -105,6 +105,18 @@ export const ModalContainer = ({currentOpen, setCurrentOpen, externalError, ctaL
       }}
       onClose={() => setCurrentOpen(null)}
     >
+      {currentOpen?.type === "dao" && <MemberModal
+        address={currentOpen?.id}
+        daos={currentOpen?.members}
+        name={currentOpen?.name}
+        childLabel={currentOpen?.childLabel}
+      />}
+      {currentOpen?.type === "member" && <MemberModal
+        address={currentOpen?.address}
+        daos={currentOpen?.daos}
+        name={currentOpen?.name}
+        childLabel={currentOpen?.childLabel}
+      />}
     {currentOpen === 'register' && <CreateAccountModal
       accounts={registerAccounts}
       changeAccount={changeAccount}

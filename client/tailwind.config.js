@@ -14,6 +14,8 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     fontSize: {
+      '80px': '80px',
+      '54px': '54px',
       '32px': '32px',
       '28px': '28px',
       '24px': '24px',
@@ -27,11 +29,11 @@ module.exports = {
       defaultPrimary: 'var(--shadow-defaultPrimary)',
       cardYes: 'var(--shadow-defaultSecondary)',
       cardNo:'var(--shadow-defaultTertiary)',
-
     },
-
     extend: {
       lineHeight: {
+        '90px': '90px',
+        '60px': '60px',
         '46px': '46px',
         '41px': '41px',
         '36px': '36px',
@@ -71,6 +73,7 @@ module.exports = {
         '5/7': '71.4285714%',
         '6/7': '85.7142857%',
         'app': '85%',
+        'appWide': '60%',
         'card' : '366px',
       },
       inset: {
@@ -104,6 +107,9 @@ module.exports = {
         textError: 'var(--color-text-error)',
 
         cardBg: 'var(--color-deep-0)',
+
+
+
 
         surfaceBg: 'var(--color-surface-bg)',
         surfaceIconBg: 'var(--color-surface-icon-bg)',
@@ -159,6 +165,4 @@ module.exports = {
     require('@tailwindcss/forms'),
     // ...
   ],
-
-
 }

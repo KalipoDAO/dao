@@ -16,7 +16,6 @@ export const useDaos = () => {
       if (dai?.meta?.count > 0) {
         setDaos(dai.data)
         if (account && account?.address) {
-          console.log(dai.data)
           setUserDaos(dai.data.filter(dao => dao.members.findIndex(m => m.id === account.address) > -1))
         }
       }
@@ -30,9 +29,21 @@ export const useDaos = () => {
     }
   }
 
+  const getUserDaos = (id) => {
+    const getDaos = async () => {
+      const client = await getClient;
+      const dai = await client.invoke("dao:getAllDaos", {limit: 10000, offset: 0});
+      if (dai?.meta?.count > 0) {
+         return dai.data.filter(dao => dao.members.findIndex(m => m.id === id) > -1)
+      }
+    }
+    return getDaos()
+  }
+
   return {
     daos,
     userDaos,
+    getUserDaos,
     setAccount,
     getDao,
   }

@@ -18,7 +18,7 @@ export const NavBarContainer = ({onLoginClick, onRegisterClick, onSignOut, user,
   const [navBarArgs, setNavBarArgs] = useState({
     onLoginClick,
     onRegisterClick,
-    logo: <img src={"/logo-white.png"} className="h-10"/>,
+    logo: <img onClick={() => history.push("/")} src={"/logo-white.png"} className="h-10 cursor-pointer"/>,
     navigation: [
       {
         name: 'Votings',
