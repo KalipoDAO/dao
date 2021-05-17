@@ -30,7 +30,7 @@ export const Routes = () => {
         onRegisterClick={() => setCurrentOpen("register")}
       />
       <div className="w-full  min-h-screen  flex flex-col">
-        <div className={"w-full mx-auto md:w-app 2xl:w-appWide flex-grow my-4"}>
+        <div className={"w-full mx-auto md:w-app  flex-grow my-4"}>
         <PageTop updateFilters={updateFilters} filters={filtersFilter} />
         <Switch>
           <Route path={"/create-dao"}>
