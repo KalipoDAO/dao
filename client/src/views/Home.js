@@ -1,7 +1,6 @@
 /* global BigInt */
 import React, {useContext, useEffect, useState} from "react";
 import {Container, VotingContainer,} from "@moosty/dao-storybook";
-import {allCardsData} from "@moosty/dao-storybook/dist/fixtures/cards";
 import {AppContext} from "../appContext";
 import {useBlocks} from "../hooks/blocks";
 import {useMembers} from "../hooks/members";
@@ -32,22 +31,29 @@ export const Home = ({account, setModal, filters}) => {
   }, [getClient, height])
 
   const homeFilter = (voting) => {
+    let temp = false;
     if (!filters) {
       return true;
     }
     if (filters && !filters?.dao && !filters?.creator && !filters.state) {
       return true;
     }
-    if (filters?.dao?.id !== 0 && filters?.dao?.id !== voting.daoId) {
+    if (filters?.dao && filters?.dao?.id !== 0 && filters?.dao?.id !== voting.daoId) {
       return false;
     }
-    if (filters?.creator?.id !== 0 && filters?.creator?.address !== voting.user.address) {
+    if ((filters?.dao?.id === 0 || !filters?.dao) || (filters?.dao?.id !== 0 && filters?.dao?.id === voting.daoId)) {
+      temp = true
+    }
+    if (filters?.creator && filters?.creator?.id !== 0 && filters?.creator?.address !== voting.user.address) {
       return false;
+    }
+    if ((filters?.creator?.id === 0 || !filters?.creator) || (filters?.creator?.id !== 0 && filters?.creator?.address === voting.user.address)) {
+      temp = true;
     }
     if (filters?.state?.id && filters?.state?.id !== 0 && filters?.state?.id !== 1) {
       return false;
     }
-    return true
+    return temp
   }
 
   const allowedToVote = (proposal) => {
@@ -191,7 +197,8 @@ export const Home = ({account, setModal, filters}) => {
   return <div>
     <Container>
       <div className="flex flex-row flex-wrap content-start space-x-5 space-y-8 mx-auto">
-        {filteredVotings?.map((card, i) => <VotingContainer key={card.id} className={i === 0 && "ml-5 mt-8"} {...card} height={height} />)}
+        {filteredVotings?.map((card, i) => <VotingContainer key={card.id} className={i === 0 && "ml-5 mt-8"} {...card}
+                                                            height={height}/>)}
       </div>
     </Container>
   </div>

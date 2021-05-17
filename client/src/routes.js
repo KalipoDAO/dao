@@ -13,12 +13,7 @@ export const Routes = () => {
   const [filtersFilter, setFilters] = useState();
   const {account, onLogin, onRegister, registerError, loadingSprinkler, onSignOut} = useAuth(setCurrentOpen);
 
-  useEffect(() => {
-    console.log(filtersFilter)
-  }, [filtersFilter])
-
   const updateFilters = (filter, value, filters) => {
-    console.log(filter, filters, value)
     setFilters({
       ...filters,
       [filter]: value,

@@ -163,8 +163,6 @@ export const CreateDao = ({account, setModal}) => {
     }
   }, [account])
 
-  useEffect(() => console.log(formData), [formData])
-
   return (<Container className="space-y-3">
     <div className="lg:ml-4 my-4 ">
       <Typography className="py-4"  type="h2" Element='h2'>
@@ -230,10 +228,7 @@ export const CreateDao = ({account, setModal}) => {
                   items: members,
                   selectedItem: {id: 0, name: "Select a member"},
                 }}
-                options={formData?.members.map(m => {
-                  console.log(m.selectedItem)
-                  return m
-                })}
+                options={formData?.members}
               />
             </FormElement>
           </FormRow>

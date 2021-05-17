@@ -239,7 +239,6 @@ export const CreateVoting = ({account, setModal}) => {
     }
   }, [account])
 
-  useEffect(() => console.log(formData), [formData])
 
   return (<Container>
     <div className="lg:ml-4 my-4 ">
