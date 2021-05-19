@@ -31,7 +31,7 @@ export const LandingPage = () => {
       </Container>
     <Container
       className={["flex flex-col lg:flex-row justify-between my-4 space-x-20  lg:my-10"].join(" ")}>
-      <div className="flex flex-col w-1/2  mb-4">
+      <div className="flex flex-col w-full lg:w-1/2  mb-4">
         <Typography type="h1" Element="h1">Kalipo</Typography>
         <Typography type="body" Element="span">Voting is a valuable governance tool. Votings give community members the
           possibility to exert influence and to express their viewpoints. However, votings consume time and energy of
@@ -39,7 +39,7 @@ export const LandingPage = () => {
           Kalipo solves this problem by making votings easy. Kalipo powers the community!
         </Typography>
       </div>
-      <div className="flex flex-col  w-1/2 ">
+      <div className="flex flex-col  w-full lg:w-1/2 ">
         <Typography type="h1" Element="h1">About the Kalipo team</Typography>
         <Typography type="body" Element="span">The team consists of Xinrong Ding, Peter Nobels and <a
           href="https://moosty.com/contact" target="_blank" rel="noopener noreferrer">Moosty</a> (Jurre, Raphael,
