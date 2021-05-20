@@ -45,14 +45,10 @@ export class DaoModule extends BaseModule {
     getAllProposals: async (params) => getAllProposalsAsJSON(this._dataAccess, params),
     getAllProposalsByDao: async (params) => getAllProposalsByDaoAsJSON(this._dataAccess, params),
     getProposal: async (params) => getProposal(this._dataAccess, params.id),
-    // getVotes: async ({dao, offset, limit}) => getVotes(this._dataAccess, dao, offset, limit),
-    // getMembers: async ({dao, offset, limit}) => getMembers(this._dataAccess, dao, offset, limit),
   }
 
   reducers = {
     addDaoToAccount: async (params, stateStore) => addDaoToAccount(stateStore, params),
     addMember: async (params, stateStore) => addMember(stateStore, params),
-    // removeMember: async (params, stateStore) => removeMember({params, stateStore}),
-    // updateRule: async (params, stateStore) => updateRule({params, stateStore}),
   }
 }
