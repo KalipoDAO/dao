@@ -2,13 +2,22 @@
   "name": "dao-node",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node --experimental-specifier-resolution=node src/run.js",
+    "transactions": "node --experimental-specifier-resolution=node test/transactions.js"
   },
+  "type": "module",
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "lisk-sdk": "^5.0.4"
+    "@moosty/lisk-sprinkler": "^0.1.7",
+    "esm": "^3.2.25",
+    "lisk-sdk": "^5.0.4",
+    "n": "^7.1.0",
+    "quokka": "0.0.7"
+  },
+  "devDependencies": {
+    "node-fetch": "^2.6.1"
   }
 }
